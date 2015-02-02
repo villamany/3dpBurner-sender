@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+ 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,7 +17,7 @@ namespace _3dpBurner
 {
     public partial class frm3dpBurner : Form
     {
-        const string ver = "0.1";
+        const string ver = "0.1.1";
         string rxString;
         List<string> fileLines;
         Int32 fileLinesCount;
@@ -40,19 +42,21 @@ namespace _3dpBurner
         //log a error message on console
         private void logError(string message, Exception err)
         {
-            rtbLog.AppendText("[ERROR]: " + message+". " + err.Message);
+            string textmsg = "[ERROR]: " + message + ". ";
+            if (err != null) textmsg += err.Message;
+            textmsg += "\r\n";
+            rtbLog.AppendText(textmsg);
+            rtbLog.ScrollToCaret();
         }
         //check status for enable/disable user controls
         private void checkControls()
         {
             if (serialPort1.IsOpen) bOpenPort.Text = "Close"; else bOpenPort.Text = "Open";
-            if (transfer) bStart.Text = "Stop"; else bStart.Text="Start";
+            bStart.Enabled = serialPort1.IsOpen && !transfer;
+            bOpenPort.Enabled = !transfer;
             cbPort.Enabled = !serialPort1.IsOpen;
             cbBaud.Enabled = !serialPort1.IsOpen;
             bRefreshport.Enabled = !serialPort1.IsOpen;
-
-            tbCommand.Enabled = serialPort1.IsOpen;
-            bSendCmd.Enabled = serialPort1.IsOpen;
 
             tbFile.Enabled = !transfer;
             bOpenfile.Enabled = !transfer;
@@ -61,12 +65,18 @@ namespace _3dpBurner
             gbLaserControl.Enabled = serialPort1.IsOpen && !transfer;
             gbCustom.Enabled = serialPort1.IsOpen && !transfer;
             gbReference.Enabled = serialPort1.IsOpen && !transfer;
-
-            bStart.Enabled=(serialPort1.IsOpen);
+           
             pbFile.Value = fileLinesConfirmed;
             pbBufer.Value = grblBuferSize - bufFree;
 
-            btnReset.Enabled = serialPort1.IsOpen;                      
+            lblBuf.Text = Convert.ToString(pbBufer.Value);//
+
+            btnReset.Enabled = serialPort1.IsOpen;
+            if (btnReset.Enabled) btnReset.BackColor = Color.Red; else btnReset.BackColor = Color.WhiteSmoke;
+
+            tbCommand.Enabled = serialPort1.IsOpen && !transfer;
+            bSendCmd.Enabled = tbCommand.Enabled;
+        
         }
         //Process received data
         private void dataRx(object sender, EventArgs e)
@@ -80,19 +90,26 @@ namespace _3dpBurner
             }
             
             else
-            {           
+            {
                 if (transfer)//is there a file transfer in progress? print line supose to be processed 
                 {
-                    rtbLog.AppendText(fileLines[fileLinesConfirmed]+ " >");
+                    if (rxString != "ok")//Add line-response only if not ok (if many lines the stream procces is slowly)
+                    {
+                        rtbLog.AppendText(fileLines[fileLinesConfirmed] + " >" + rxString+"\r");
+                    }
                 }
-                rtbLog.AppendText(rxString);//print received line response
-                rtbLog.AppendText("\r");
-                rtbLog.ScrollToCaret();
+                else
+                {
+                    rtbLog.AppendText(rxString);//print received line response
+                    rtbLog.AppendText("\r");
+                    rtbLog.ScrollToCaret();
+                }
                 if (transfer)//transfer in progress?
                 {
+                    
                     bufFree += (fileLines[fileLinesConfirmed].Length+1);//update bytes supose to be free on grbl rx bufer
                     fileLinesConfirmed++;//line processed
-                    if (fileLinesConfirmed >= fileLinesCount)//Transfer finished and provessed? Update status and controls
+                    if (fileLinesConfirmed >= fileLinesCount)//Transfer finished and processed? Update status and controls
                     {
                         transfer = false;
                         checkControls();
@@ -100,8 +117,9 @@ namespace _3dpBurner
                         if ((!File.Exists(tbFile.Text)) || (fileLinesCount < 1) || (fileLinesSent < 1))
                             lblFileProgress.Text = "0% (0 lines)";//"0%   ( 0/0 lines )";
                         else
-                            lblFileProgress.Text = Convert.ToString(fileLinesConfirmed * 100 / fileLinesCount) + "% (" + Convert.ToString(fileLinesCount) + " lines)";
-
+                        lblFileProgress.Text = Convert.ToString(fileLinesConfirmed * 100 / fileLinesCount) + "% (" + Convert.ToString(fileLinesConfirmed) + "/" + Convert.ToString(fileLinesCount) + " lines)";
+                        rtbLog.AppendText("[File done @"+lblElapsed.Text+"]\r\n");
+                        rtbLog.ScrollToCaret();
                         MessageBox.Show("Yeah!. Burning Done!\r\n\r\nWorking time: "+ lblElapsed.Text ,"Done", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     
                     }
@@ -110,9 +128,9 @@ namespace _3dpBurner
                         if (fileLinesSent < fileLinesCount) sendNextLine();//If more lines on file, send it
                     }
                     if ((!File.Exists(tbFile.Text)) || (fileLinesCount < 1) || (fileLinesSent < 1))
-                        lblFileProgress.Text = "0% (0 lines)";//"0%   ( 0/0 lines )";
+                        lblFileProgress.Text = "0% (0/0 lines)";//"0%   ( 0/0 lines )";
                     else
-                        lblFileProgress.Text = Convert.ToString(fileLinesConfirmed * 100 / fileLinesCount) + "% (" + Convert.ToString(fileLinesCount) + " lines)";
+                        lblFileProgress.Text = Convert.ToString(fileLinesConfirmed * 100 / fileLinesCount) + "% ("+Convert.ToString(fileLinesConfirmed)+"/"  + Convert.ToString(fileLinesCount) + " lines)";
 
                     checkControls();
                 }
@@ -167,8 +185,6 @@ namespace _3dpBurner
         {
             try
             {
-                rtbLog.Clear();
-                Refresh();
                 serialPort1.PortName = cbPort.Text;
                 serialPort1.BaudRate = Convert.ToInt32(cbBaud.Text);
                 serialPort1.Open();
@@ -209,7 +225,6 @@ namespace _3dpBurner
             rtbLog.AppendText("[!]");
             var dataArray = new byte[] {Convert.ToByte('!')};//Ctrl-X
             serialPort1.Write(dataArray, 0, 1);
-
         }
         //Send reset sentence
         private void grblReset()//Stop/reset button
@@ -270,13 +285,6 @@ namespace _3dpBurner
             checkControls();
             loadSettings();
             prepareFile();
-
-
-            
-
-           
-  
-           
         }
         private void loadSettings()
         {
@@ -434,9 +442,9 @@ namespace _3dpBurner
             }
             //file progress status
             if ((!File.Exists(tbFile.Text)) || (fileLinesCount < 1))
-            lblFileProgress.Text = "0% (0 lines)";//"0%   ( 0/0 lines )";
+            lblFileProgress.Text = "0% (0/0 lines)";//"0%   ( 0/0 lines )";
             else
-                lblFileProgress.Text = Convert.ToString(fileLinesSent * 100 / fileLinesCount) + "% (" + Convert.ToString(fileLinesCount) + " lines)";
+                lblFileProgress.Text =  "0% (0/" + Convert.ToString(fileLinesCount) + " lines)";
 
             checkControls();
 
@@ -444,27 +452,20 @@ namespace _3dpBurner
         }
         private void bStar_Click(object sender, EventArgs e)
         {
-            if (!transfer)
-            {                
+               
                 if (!File.Exists(tbFile.Text))
                 {
-                    MessageBox.Show(this, "Error opening file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logError("Error opening file",null);
                     return;
                 }
                 prepareFile();
                 transfer = true;
                 fileLinesConfirmed = 0;
                 timeInit = DateTime.UtcNow;
+                rtbLog.AppendText("[Sending file...]\r\n");
+                rtbLog.ScrollToCaret();
                 sendNextLine();
-                
-            }
-            else
-
-            {
-                transfer = false;
-               
-            }
-            checkControls();
+                checkControls();
         }
 
 

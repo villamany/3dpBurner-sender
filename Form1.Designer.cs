@@ -81,6 +81,7 @@
             this.gbReference = new System.Windows.Forms.GroupBox();
             this.btnZero = new System.Windows.Forms.Button();
             this.gbCustom = new System.Windows.Forms.GroupBox();
+            this.lblBuf = new System.Windows.Forms.Label();
             this.gbJog.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbConecction.SuspendLayout();
@@ -299,7 +300,7 @@
             this.pbBufer.BackColor = System.Drawing.SystemColors.Control;
             this.pbBufer.Location = new System.Drawing.Point(115, 49);
             this.pbBufer.Name = "pbBufer";
-            this.pbBufer.Size = new System.Drawing.Size(129, 8);
+            this.pbBufer.Size = new System.Drawing.Size(103, 8);
             this.pbBufer.Step = 1;
             this.pbBufer.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.pbBufer.TabIndex = 41;
@@ -346,9 +347,9 @@
             // 
             // btnReset
             // 
-            this.btnReset.BackColor = System.Drawing.SystemColors.Control;
+            this.btnReset.BackColor = System.Drawing.Color.Red;
             this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReset.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnReset.ForeColor = System.Drawing.Color.Yellow;
             this.btnReset.Location = new System.Drawing.Point(393, 265);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(214, 77);
@@ -440,6 +441,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.lblBuf);
             this.groupBox2.Controls.Add(this.lblElapsed);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.lblFileProgress);
@@ -590,9 +592,11 @@
             // 
             this.rtbLog.BackColor = System.Drawing.SystemColors.Window;
             this.rtbLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rtbLog.DetectUrls = false;
             this.rtbLog.Location = new System.Drawing.Point(1, 1);
             this.rtbLog.Name = "rtbLog";
             this.rtbLog.ReadOnly = true;
+            this.rtbLog.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.rtbLog.Size = new System.Drawing.Size(369, 110);
             this.rtbLog.TabIndex = 4;
             this.rtbLog.Text = "";
@@ -643,6 +647,15 @@
             this.gbCustom.TabIndex = 62;
             this.gbCustom.TabStop = false;
             this.gbCustom.Text = "Custom";
+            // 
+            // lblBuf
+            // 
+            this.lblBuf.AutoSize = true;
+            this.lblBuf.Location = new System.Drawing.Point(220, 46);
+            this.lblBuf.Name = "lblBuf";
+            this.lblBuf.Size = new System.Drawing.Size(25, 13);
+            this.lblBuf.TabIndex = 47;
+            this.lblBuf.Text = "000";
             // 
             // frm3dpBurner
             // 
@@ -732,6 +745,7 @@
         private System.Windows.Forms.Button btnZero;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RichTextBox rtbLog;
+        private System.Windows.Forms.Label lblBuf;
     }
 }
 
