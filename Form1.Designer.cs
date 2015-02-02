@@ -130,9 +130,8 @@
             // serialPort1
             // 
             this.serialPort1.BaudRate = 115200;
-            this.serialPort1.ReadBufferSize = 512;
+            this.serialPort1.ReadBufferSize = 2048;
             this.serialPort1.ReadTimeout = 1000;
-            this.serialPort1.WriteBufferSize = 512;
             this.serialPort1.WriteTimeout = 1000;
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 

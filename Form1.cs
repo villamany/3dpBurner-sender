@@ -73,8 +73,8 @@ namespace _3dpBurner
         {
             rxString=criticalRxString;//copy critical variable and unlock it
             lockRx = false;
- 
-            if ((rxString.Length>0)&&(criticalRxString[0]=='<'))//is a status message ?
+
+            if ((rxString.Length > 0) && (rxString[0] == '<'))//is a status message ?
             { //<Idle,MPos:0.000,0.000,0.000,WPos:0.000,0.000,0.000>
                 Text = "3dpBurner Sender v" + ver+"     "+ rxString;           
             }
@@ -100,7 +100,7 @@ namespace _3dpBurner
                         if ((!File.Exists(tbFile.Text)) || (fileLinesCount < 1) || (fileLinesSent < 1))
                             lblFileProgress.Text = "0% (0 lines)";//"0%   ( 0/0 lines )";
                         else
-                            lblFileProgress.Text = Convert.ToString(fileLinesSent * 100 / fileLinesCount) + "% (" + Convert.ToString(fileLinesCount) + " lines)";
+                            lblFileProgress.Text = Convert.ToString(fileLinesConfirmed * 100 / fileLinesCount) + "% (" + Convert.ToString(fileLinesCount) + " lines)";
 
                         MessageBox.Show("Yeah!. Burning Done!\r\n\r\nWorking time: "+ lblElapsed.Text ,"Done", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     
@@ -149,9 +149,9 @@ namespace _3dpBurner
                         criticalRxString += serialPort1.ReadTo("\r\n");//read line from grbl, discard CR LF
                         this.Invoke(new EventHandler(dataRx));//tigger rx process
                 }
-                catch (Exception err)
+                catch
                 {
-                    logError("Reading GRBL response",err);
+                   
                 }
                
             }
@@ -187,10 +187,11 @@ namespace _3dpBurner
             try
             {
                 if (serialPort1.IsOpen)
-                {                
+                {
                     grblReset();
+                    while (serialPort1.BytesToRead > 0) ;
                     serialPort1.Close();
-                    Thread.Sleep(2000);     
+                       
                 }
                 checkControls();
                 return (true);
@@ -201,12 +202,23 @@ namespace _3dpBurner
                 return (false);
             }
         }
+        //send hold sentence not used
+        private void grblHold()//Stop/reset button
+        {
+            transfer = false;
+            rtbLog.AppendText("[!]");
+            var dataArray = new byte[] {Convert.ToByte('!')};//Ctrl-X
+            serialPort1.Write(dataArray, 0, 1);
+
+        }
+        //Send reset sentence
         private void grblReset()//Stop/reset button
         {
+            transfer = false;
             rtbLog.AppendText("[CTRL-X]");
             var dataArray = new byte[] { 24 };//Ctrl-X
             serialPort1.Write(dataArray, 0, 1);
-            transfer = false;
+            
         }
         private void button1_Click(object sender, EventArgs e)//Open port button
         {
@@ -450,6 +462,7 @@ namespace _3dpBurner
 
             {
                 transfer = false;
+               
             }
             checkControls();
         }
