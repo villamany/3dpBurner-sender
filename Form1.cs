@@ -385,7 +385,7 @@ namespace _3dpBurner
         //Fornm on close
         private void frm3dpBurner_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ClosePort(); return;
+            //ClosePort(); return;
             if (transfer)
             {
                 button5_Click(this, null);
