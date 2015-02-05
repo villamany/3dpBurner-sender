@@ -66,6 +66,3 @@ packages/
 
 #Test files
 *.testsettings
-
-#Add binary file
-!/bin/Release/3dpBurnerSender.exe
