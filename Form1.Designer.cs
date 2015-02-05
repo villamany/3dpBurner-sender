@@ -63,14 +63,15 @@
             this.gbJog = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblBuf = new System.Windows.Forms.Label();
             this.lblElapsed = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.lblFileProgress = new System.Windows.Forms.Label();
             this.tbLaserPwr = new System.Windows.Forms.TextBox();
-            this.bRefreshport = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tmrUpdates = new System.Windows.Forms.Timer(this.components);
             this.gbConecction = new System.Windows.Forms.GroupBox();
+            this.bRefreshport = new System.Windows.Forms.Button();
             this.gbLaserControl = new System.Windows.Forms.GroupBox();
             this.btnLaserPwr = new System.Windows.Forms.Button();
             this.tbCommand = new System.Windows.Forms.TextBox();
@@ -81,7 +82,6 @@
             this.gbReference = new System.Windows.Forms.GroupBox();
             this.btnZero = new System.Windows.Forms.Button();
             this.gbCustom = new System.Windows.Forms.GroupBox();
-            this.lblBuf = new System.Windows.Forms.Label();
             this.gbJog.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbConecction.SuspendLayout();
@@ -197,6 +197,7 @@
             // 
             // btsLaserOff
             // 
+            this.btsLaserOff.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btsLaserOff.Location = new System.Drawing.Point(79, 16);
             this.btsLaserOff.Name = "btsLaserOff";
             this.btsLaserOff.Size = new System.Drawing.Size(73, 72);
@@ -411,6 +412,7 @@
             // gbJog
             // 
             this.gbJog.BackColor = System.Drawing.SystemColors.Control;
+            this.gbJog.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.gbJog.Controls.Add(this.button1);
             this.gbJog.Controls.Add(this.button22);
             this.gbJog.Controls.Add(this.button21);
@@ -458,6 +460,15 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "File";
             // 
+            // lblBuf
+            // 
+            this.lblBuf.AutoSize = true;
+            this.lblBuf.Location = new System.Drawing.Point(220, 46);
+            this.lblBuf.Name = "lblBuf";
+            this.lblBuf.Size = new System.Drawing.Size(25, 13);
+            this.lblBuf.TabIndex = 47;
+            this.lblBuf.Text = "000";
+            // 
             // lblElapsed
             // 
             this.lblElapsed.AutoSize = true;
@@ -499,16 +510,6 @@
             this.tbLaserPwr.Text = "0";
             this.tbLaserPwr.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // bRefreshport
-            // 
-            this.bRefreshport.Location = new System.Drawing.Point(218, 17);
-            this.bRefreshport.Name = "bRefreshport";
-            this.bRefreshport.Size = new System.Drawing.Size(28, 23);
-            this.bRefreshport.TabIndex = 56;
-            this.bRefreshport.Text = "R";
-            this.bRefreshport.UseVisualStyleBackColor = true;
-            this.bRefreshport.Click += new System.EventHandler(this.bRefreshport_Click);
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
@@ -532,6 +533,17 @@
             this.gbConecction.TabIndex = 58;
             this.gbConecction.TabStop = false;
             this.gbConecction.Text = "Connection";
+            // 
+            // bRefreshport
+            // 
+            this.bRefreshport.BackgroundImage = global::_3dpBurner.Properties.Resources.refresh;
+            this.bRefreshport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.bRefreshport.Location = new System.Drawing.Point(215, 15);
+            this.bRefreshport.Name = "bRefreshport";
+            this.bRefreshport.Size = new System.Drawing.Size(29, 27);
+            this.bRefreshport.TabIndex = 56;
+            this.bRefreshport.UseVisualStyleBackColor = true;
+            this.bRefreshport.Click += new System.EventHandler(this.bRefreshport_Click);
             // 
             // gbLaserControl
             // 
@@ -647,15 +659,6 @@
             this.gbCustom.TabIndex = 62;
             this.gbCustom.TabStop = false;
             this.gbCustom.Text = "Custom";
-            // 
-            // lblBuf
-            // 
-            this.lblBuf.AutoSize = true;
-            this.lblBuf.Location = new System.Drawing.Point(220, 46);
-            this.lblBuf.Name = "lblBuf";
-            this.lblBuf.Size = new System.Drawing.Size(25, 13);
-            this.lblBuf.TabIndex = 47;
-            this.lblBuf.Text = "000";
             // 
             // frm3dpBurner
             // 
