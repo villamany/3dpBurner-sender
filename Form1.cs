@@ -1,5 +1,7 @@
 ﻿//Changelog v0.1.1 to 0.1.2development
 
+//introduced a bug, bad logging of commands
+//----------Commit
 //Last commit introduced a bug by not saving settings on exit when serial port is closed
 //----------Commit
 //Code cleanup
@@ -205,6 +207,13 @@ namespace _3dpBurner
              }
         }
         //Send a line adding a CR
+        //Send a line adding the enter key and log in console
+        private void sendLine(string data)
+        {
+            serialPort1.Write(data + "\r");
+            rtbLog.AppendText(data + " >");//if not in transfer log the txLine
+        }
+        //Open port
         private bool OpenPort()
         {
             try
@@ -324,44 +333,44 @@ namespace _3dpBurner
         //Send command button
         private void bSendCmd_Click(object sender, EventArgs e)
         {
-            serialPort1.Write(tbCommand.Text+"\r");
+            sendLine(tbCommand.Text);
             tbCommand.Clear();
         }
         //TextBox manual command
         private void tbCommand_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar != (char)13) return;
-            serialPort1.Write(tbCommand.Text + "\r");
+            sendLine(tbCommand.Text);
             tbCommand.Clear();
         }
         //Jog X+ button
         private void bXup_Click(object sender, EventArgs e)
         {
             jogging = true;
-            serialPort1.Write("G91G0X+" + tbStepSize.Text + "\r");      
+            sendLine("G91G0X+" + tbStepSize.Text);      
         }
         //Jog X- button
         private void bXdown_Click(object sender, EventArgs e)
         {
             jogging = true;
-            serialPort1.Write("G91G0X-" + tbStepSize.Text + "\r");  
+            sendLine("G91G0X-" + tbStepSize.Text);  
         }
         //Jog Y+ button
         private void bYup_Click(object sender, EventArgs e)
         {
             jogging = true;
-            serialPort1.Write("G91G0Y+" + tbStepSize.Text + "\r");
+            sendLine("G91G0Y+" + tbStepSize.Text);
         }
         //Jog Y- button
         private void bYdown_Click(object sender, EventArgs e)
         {
             jogging = true;
-            serialPort1.Write("G91G0Y-" + tbStepSize.Text + "\r");
+            sendLine("G91G0Y-" + tbStepSize.Text);
         }
         //Homming button
         private void bHome_Click(object sender, EventArgs e)
         {
-            serialPort1.Write("$H\r");
+            sendLine("$H");
         }
         //.01 Step button
         private void button12_Click(object sender, EventArgs e)
@@ -486,7 +495,7 @@ namespace _3dpBurner
         //Unlock alarm button
         private void button11_Click(object sender, EventArgs e)
         {
-            serialPort1.Write("$X\r");
+            sendLine("$X");
         }
         //Update time elapsed
         private void tmrUpdates_Tick(object sender, EventArgs e)
@@ -515,39 +524,39 @@ namespace _3dpBurner
         //Laser On button
         private void btnLaserOn_Click(object sender, EventArgs e)
         {
-            serialPort1.Write("M3\r");
+            sendLine("M3");
         }
         //Laser Off button
         private void btsLaserOff_Click(object sender, EventArgs e)
         {
-            serialPort1.Write("M5\r");
+            sendLine("M5");
         }
         //Custom 1 button
         private void btnCustom1_Click(object sender, EventArgs e)
         {
-            serialPort1.Write(tbCustom1.Text + "\r");
+            sendLine(tbCustom1.Text);
         }
         //Custom 1 textBox  
         private void tbCustom1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar != (char)13) return;
-            serialPort1.Write(tbCustom1.Text + "\r");
+            sendLine(tbCustom1.Text);
         }
         //Custom2 button
         private void btnCustom2_Click(object sender, EventArgs e)
         {
-            serialPort1.Write(tbCustom2.Text + "\r");
+            sendLine(tbCustom2.Text);
         }
         //Custom 2 textBox
         private void tbCustom2_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar != (char)13) return;
-            serialPort1.Write(tbCustom2.Text + "\r");
+            sendLine(tbCustom2.Text);
         }
         //Homing button
         private void btnZero_Click(object sender, EventArgs e)
         {
-            serialPort1.Write("G92X0Y0Z0\r");
+            sendLine("G92X0Y0Z0");
         }
         //Clear log button
         private void btlClearLog_Click(object sender, EventArgs e)
@@ -557,7 +566,7 @@ namespace _3dpBurner
         //Laser PWR button
         private void btnLaserPwr_Click(object sender, EventArgs e)
         {
-            serialPort1.Write("S" + tbLaserPwr.Text+"\r");
+            sendLine("S" + tbLaserPwr.Text);
         }  
     }
 }
