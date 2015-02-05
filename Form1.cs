@@ -1,7 +1,8 @@
-﻿//Changelog 
+﻿//Changelog v0.1.1 to 0.1.2development
 
+//Last commit introduced a bug by not saving settings on exit when serial port is closed
+//----------Commit
 //Code cleanup
-
 //Some stability issues fixed
  
 using System;
@@ -38,12 +39,13 @@ namespace _3dpBurner
 
         bool jogging=false;//true when we are jogging
 
+        //Thread exception
         private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             Exception ex = e.Exception;
             MessageBox.Show(ex.Message, "Thread exception");
         }
-
+        //Unhandled exception
         private static void Application_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject != null)
@@ -52,6 +54,7 @@ namespace _3dpBurner
                 MessageBox.Show(ex.Message, "Application exception");
             }
         }
+        //Constructor
         public frm3dpBurner()
         {
             InitializeComponent();
@@ -68,13 +71,13 @@ namespace _3dpBurner
         //log a error message
         private void logError(string message, Exception err)
         {
-            string textmsg = "[ERROR]: " + message + ". ";
+            string textmsg = "\r\n[ERROR]: " + message + ". ";
             if (err != null) textmsg += err.Message;
             textmsg += "\r\n";
             rtbLog.AppendText(textmsg);
             rtbLog.ScrollToCaret();
         }
-        //update visual controls status
+        //update visual controls status (Enable/Disable controls)
         private void updateControls()
         {
             if (serialPort1.IsOpen) bOpenPort.Text = "Close"; else bOpenPort.Text = "Open";
@@ -96,16 +99,18 @@ namespace _3dpBurner
             if (btnReset.Enabled) btnReset.BackColor = Color.Red; else btnReset.BackColor = Color.WhiteSmoke;
 
             tbCommand.Enabled = serialPort1.IsOpen && !transfer;
-            bSendCmd.Enabled = tbCommand.Enabled;       
+            bSendCmd.Enabled = tbCommand.Enabled;     
+  
+
         }
-        //Update file progress
+        //Update file progress (progressBars and labels)
         private void updateProgress()
         {
             pbFile.Value = fileLinesConfirmed;
             pbBufer.Value = grblBuferSize - bufFree;
             lblBuf.Text = Convert.ToString(pbBufer.Value);//
             //file progress status
-            if ((!File.Exists(tbFile.Text)) || (fileLinesCount < 1) || (fileLinesSent < 1))
+            if ((!File.Exists(tbFile.Text)) || (fileLinesCount < 1) )//|| (fileLinesSent < 1))
                 lblFileProgress.Text = "0% (0/0 lines)";//"0%   ( 0/0 lines )";
             else
                 lblFileProgress.Text = Convert.ToString(fileLinesConfirmed * 100 / fileLinesCount) + "% (" + Convert.ToString(fileLinesConfirmed) + "/" + Convert.ToString(fileLinesCount) + " lines)";
@@ -322,6 +327,13 @@ namespace _3dpBurner
             serialPort1.Write(tbCommand.Text+"\r");
             tbCommand.Clear();
         }
+        //TextBox manual command
+        private void tbCommand_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)13) return;
+            serialPort1.Write(tbCommand.Text + "\r");
+            tbCommand.Clear();
+        }
         //Jog X+ button
         private void bXup_Click(object sender, EventArgs e)
         {
@@ -366,6 +378,11 @@ namespace _3dpBurner
         {
             tbStepSize.Text = "1";
         }
+        //5 step button
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            tbStepSize.Text = "5";
+        }
         //10 Step button
         private void button21_Click(object sender, EventArgs e)
         {
@@ -386,23 +403,16 @@ namespace _3dpBurner
         private void frm3dpBurner_FormClosing(object sender, FormClosingEventArgs e)
         {
             //ClosePort(); return;
+            saveSettings();
             if (transfer)
             {
-                button5_Click(this, null);
-                saveSettings();
+                button5_Click(this, null);           
                 e.Cancel=true;
             }
             else
             {
                 ClosePort();
             }
-        }
-        //Send manual command
-        private void tbCommand_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar != (char)13) return;
-            serialPort1.Write(tbCommand.Text+"\r");
-            tbCommand.Clear();
         }
         //Open file
         private void bOpenfile_Click(object sender, EventArgs e)
@@ -435,7 +445,6 @@ namespace _3dpBurner
                     line = line.Replace("\n", " ");//remove LF
                     line = line.ToUpper();//all uppercase
                     line = line.Trim();
-
                    if ((!string.IsNullOrEmpty(line))&&(line[0]!='('))//trim lines and remove all empty lines and comment lines
                     {
                         fileLines.Add(line);//add line to list to send
@@ -444,17 +453,15 @@ namespace _3dpBurner
                     line = file.ReadLine();
                 }
                 file.Close();
-
-                pbFile.Maximum = fileLinesCount;
+                pbFile.Maximum = fileLinesCount;//progressBar maximun update
                 elapsed = TimeSpan.Zero;
                 lblElapsed.Text = elapsed.ToString(@"hh\:mm\:ss");
             }
-            
             updateProgress();
         }
+        //Send file button
         private void bStar_Click(object sender, EventArgs e)
-        {
-               
+        {             
                 if (!File.Exists(tbFile.Text))
                 {
                     logError("Error opening file",null);
@@ -469,7 +476,6 @@ namespace _3dpBurner
                 sendNextLine();
                 updateControls();
         }
-
         //Reset button
         private void button5_Click(object sender, EventArgs e)
         {
@@ -477,12 +483,12 @@ namespace _3dpBurner
             transfer = false;
             updateControls();          
         }
-
+        //Unlock alarm button
         private void button11_Click(object sender, EventArgs e)
         {
             serialPort1.Write("$X\r");
         }
-        //Update and show time elapsed
+        //Update time elapsed
         private void tmrUpdates_Tick(object sender, EventArgs e)
         {
             if (transfer)//if active transfer update elapsed time
@@ -506,58 +512,52 @@ namespace _3dpBurner
                 }
             }          
         }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            tbStepSize.Text = "5";
-        }
-
+        //Laser On button
         private void btnLaserOn_Click(object sender, EventArgs e)
         {
             serialPort1.Write("M3\r");
         }
-
+        //Laser Off button
         private void btsLaserOff_Click(object sender, EventArgs e)
         {
             serialPort1.Write("M5\r");
         }
-
+        //Custom 1 button
         private void btnCustom1_Click(object sender, EventArgs e)
         {
             serialPort1.Write(tbCustom1.Text + "\r");
         }
-
+        //Custom 1 textBox  
+        private void tbCustom1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)13) return;
+            serialPort1.Write(tbCustom1.Text + "\r");
+        }
+        //Custom2 button
         private void btnCustom2_Click(object sender, EventArgs e)
         {
             serialPort1.Write(tbCustom2.Text + "\r");
         }
-
+        //Custom 2 textBox
+        private void tbCustom2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != (char)13) return;
+            serialPort1.Write(tbCustom2.Text + "\r");
+        }
+        //Homing button
         private void btnZero_Click(object sender, EventArgs e)
         {
             serialPort1.Write("G92X0Y0Z0\r");
         }
-
+        //Clear log button
         private void btlClearLog_Click(object sender, EventArgs e)
         {
             rtbLog.Clear();
         }
-
+        //Laser PWR button
         private void btnLaserPwr_Click(object sender, EventArgs e)
         {
             serialPort1.Write("S" + tbLaserPwr.Text+"\r");
-        }
-        //Custom 1 button  
-        private void tbCustom1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar != (char)13) return;
-            serialPort1.Write(tbCustom1.Text + "\r");               
-        }
-        //Custom 2 button 
-        private void tbCustom2_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar != (char)13) return;
-            serialPort1.Write(tbCustom2.Text + "\r");   
-        }
-  
-}
+        }  
+    }
 }

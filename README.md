@@ -1,11 +1,14 @@
-# 3dpBurner-sender GPLv3 licensed
-A GCODE sender for 3dpBurner laser cutter/engraver (GRBL based)
+# 3dpBurner-sender 
+A Windows GCODE sender for 3dpBurner laser cutter/engraver (GRBL based)
+
+Licensed under GPLv3
 
 GitHub notes:
 The master branch contain the development version.
-Check the "Releases" for release versions and binary files.
+Check the "Releases" for release versions and .exe files.
 
 v0.1.1
+
 // Improved file streaming speed: On file streaming all line responses was added to log console. this produce a slowly file streaming due many visual lines to move. Now only add lines if response is not "ok"
 
 // Removed "stop" button it no was canceling instantly, now only "start" button enabled/disabled during streaming, press reset if you want to cancel the work.
