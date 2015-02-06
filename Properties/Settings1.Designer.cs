@@ -106,5 +106,17 @@ namespace _3dpBurner.Properties {
                 this["custom2"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2axisLasePWR_S")]
+        public string mode {
+            get {
+                return ((string)(this["mode"]));
+            }
+            set {
+                this["mode"] = value;
+            }
+        }
     }
 }

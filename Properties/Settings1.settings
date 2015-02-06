@@ -23,5 +23,8 @@
     <Setting Name="custom2" Type="System.String" Scope="User">
       <Value Profile="(Default)">G0 X10 Y10</Value>
     </Setting>
+    <Setting Name="mode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2axisLasePWR_S</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

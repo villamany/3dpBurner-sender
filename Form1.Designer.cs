@@ -61,6 +61,8 @@
             this.button21 = new System.Windows.Forms.Button();
             this.button22 = new System.Windows.Forms.Button();
             this.gbJog = new System.Windows.Forms.GroupBox();
+            this.btnZdown = new System.Windows.Forms.Button();
+            this.btnZup = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblBuf = new System.Windows.Forms.Label();
@@ -80,8 +82,23 @@
             this.rtbLog = new System.Windows.Forms.RichTextBox();
             this.btlClearLog = new System.Windows.Forms.Button();
             this.gbReference = new System.Windows.Forms.GroupBox();
+            this.btnZeroZ = new System.Windows.Forms.Button();
+            this.btnZeroXY = new System.Windows.Forms.Button();
             this.btnZero = new System.Windows.Forms.Button();
             this.gbCustom = new System.Windows.Forms.GroupBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.modeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.axisMillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.axisLaserPWRSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.axisLaserPWRZToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.axisLaserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.restoreSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.gbJog.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbConecction.SuspendLayout();
@@ -90,6 +107,8 @@
             this.panel1.SuspendLayout();
             this.gbReference.SuspendLayout();
             this.gbCustom.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // bOpenPort
@@ -140,7 +159,7 @@
             // 
             this.bXdown.BackColor = System.Drawing.SystemColors.Control;
             this.bXdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bXdown.Location = new System.Drawing.Point(4, 66);
+            this.bXdown.Location = new System.Drawing.Point(5, 66);
             this.bXdown.Name = "bXdown";
             this.bXdown.Size = new System.Drawing.Size(44, 44);
             this.bXdown.TabIndex = 7;
@@ -152,7 +171,7 @@
             // 
             this.bXup.BackColor = System.Drawing.SystemColors.Control;
             this.bXup.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bXup.Location = new System.Drawing.Point(96, 66);
+            this.bXup.Location = new System.Drawing.Point(51, 66);
             this.bXup.Name = "bXup";
             this.bXup.Size = new System.Drawing.Size(44, 44);
             this.bXup.TabIndex = 8;
@@ -164,7 +183,7 @@
             // 
             this.bYup.BackColor = System.Drawing.SystemColors.Control;
             this.bYup.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bYup.Location = new System.Drawing.Point(51, 22);
+            this.bYup.Location = new System.Drawing.Point(29, 21);
             this.bYup.Name = "bYup";
             this.bYup.Size = new System.Drawing.Size(44, 44);
             this.bYup.TabIndex = 9;
@@ -177,7 +196,7 @@
             this.bYdown.BackColor = System.Drawing.SystemColors.Control;
             this.bYdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bYdown.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.bYdown.Location = new System.Drawing.Point(51, 108);
+            this.bYdown.Location = new System.Drawing.Point(29, 111);
             this.bYdown.Name = "bYdown";
             this.bYdown.Size = new System.Drawing.Size(44, 44);
             this.bYdown.TabIndex = 10;
@@ -256,7 +275,7 @@
             // 
             // bSendCmd
             // 
-            this.bSendCmd.Location = new System.Drawing.Point(334, 132);
+            this.bSendCmd.Location = new System.Drawing.Point(334, 133);
             this.bSendCmd.Name = "bSendCmd";
             this.bSendCmd.Size = new System.Drawing.Size(44, 23);
             this.bSendCmd.TabIndex = 28;
@@ -279,7 +298,7 @@
             // 
             this.tbStepSize.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbStepSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbStepSize.Location = new System.Drawing.Point(52, 76);
+            this.tbStepSize.Location = new System.Drawing.Point(98, 125);
             this.tbStepSize.MaxLength = 3;
             this.tbStepSize.Name = "tbStepSize";
             this.tbStepSize.Size = new System.Drawing.Size(40, 23);
@@ -291,7 +310,7 @@
             // 
             this.pbFile.Location = new System.Drawing.Point(7, 87);
             this.pbFile.Name = "pbFile";
-            this.pbFile.Size = new System.Drawing.Size(235, 20);
+            this.pbFile.Size = new System.Drawing.Size(237, 20);
             this.pbFile.Step = 1;
             this.pbFile.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.pbFile.TabIndex = 40;
@@ -301,7 +320,7 @@
             this.pbBufer.BackColor = System.Drawing.SystemColors.Control;
             this.pbBufer.Location = new System.Drawing.Point(115, 49);
             this.pbBufer.Name = "pbBufer";
-            this.pbBufer.Size = new System.Drawing.Size(103, 8);
+            this.pbBufer.Size = new System.Drawing.Size(105, 8);
             this.pbBufer.Step = 1;
             this.pbBufer.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.pbBufer.TabIndex = 41;
@@ -351,9 +370,9 @@
             this.btnReset.BackColor = System.Drawing.Color.Red;
             this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReset.ForeColor = System.Drawing.Color.Yellow;
-            this.btnReset.Location = new System.Drawing.Point(393, 265);
+            this.btnReset.Location = new System.Drawing.Point(395, 281);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(214, 77);
+            this.btnReset.Size = new System.Drawing.Size(214, 81);
             this.btnReset.TabIndex = 47;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = false;
@@ -413,6 +432,8 @@
             // 
             this.gbJog.BackColor = System.Drawing.SystemColors.Control;
             this.gbJog.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.gbJog.Controls.Add(this.btnZdown);
+            this.gbJog.Controls.Add(this.btnZup);
             this.gbJog.Controls.Add(this.button1);
             this.gbJog.Controls.Add(this.button22);
             this.gbJog.Controls.Add(this.button21);
@@ -424,12 +445,38 @@
             this.gbJog.Controls.Add(this.bYup);
             this.gbJog.Controls.Add(this.bXup);
             this.gbJog.Controls.Add(this.bXdown);
-            this.gbJog.Location = new System.Drawing.Point(261, 7);
+            this.gbJog.Location = new System.Drawing.Point(261, 28);
             this.gbJog.Name = "gbJog";
             this.gbJog.Size = new System.Drawing.Size(186, 171);
             this.gbJog.TabIndex = 53;
             this.gbJog.TabStop = false;
             this.gbJog.Text = "Motion";
+            // 
+            // btnZdown
+            // 
+            this.btnZdown.BackColor = System.Drawing.SystemColors.Control;
+            this.btnZdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnZdown.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.btnZdown.Location = new System.Drawing.Point(99, 67);
+            this.btnZdown.Name = "btnZdown";
+            this.btnZdown.Size = new System.Drawing.Size(38, 34);
+            this.btnZdown.TabIndex = 55;
+            this.btnZdown.Text = "Z-";
+            this.btnZdown.UseVisualStyleBackColor = false;
+            this.btnZdown.Click += new System.EventHandler(this.btnZdown_Click);
+            // 
+            // btnZup
+            // 
+            this.btnZup.BackColor = System.Drawing.SystemColors.Control;
+            this.btnZup.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnZup.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.btnZup.Location = new System.Drawing.Point(99, 27);
+            this.btnZup.Name = "btnZup";
+            this.btnZup.Size = new System.Drawing.Size(38, 34);
+            this.btnZup.TabIndex = 54;
+            this.btnZup.Text = "Z+";
+            this.btnZup.UseVisualStyleBackColor = false;
+            this.btnZup.Click += new System.EventHandler(this.btnZup_Click);
             // 
             // button1
             // 
@@ -453,7 +500,7 @@
             this.groupBox2.Controls.Add(this.tbFile);
             this.groupBox2.Controls.Add(this.pbBufer);
             this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Location = new System.Drawing.Point(4, 65);
+            this.groupBox2.Location = new System.Drawing.Point(4, 86);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(251, 113);
             this.groupBox2.TabIndex = 54;
@@ -463,7 +510,7 @@
             // lblBuf
             // 
             this.lblBuf.AutoSize = true;
-            this.lblBuf.Location = new System.Drawing.Point(220, 46);
+            this.lblBuf.Location = new System.Drawing.Point(221, 46);
             this.lblBuf.Name = "lblBuf";
             this.lblBuf.Size = new System.Drawing.Size(25, 13);
             this.lblBuf.TabIndex = 47;
@@ -472,7 +519,7 @@
             // lblElapsed
             // 
             this.lblElapsed.AutoSize = true;
-            this.lblElapsed.Location = new System.Drawing.Point(195, 70);
+            this.lblElapsed.Location = new System.Drawing.Point(197, 70);
             this.lblElapsed.Name = "lblElapsed";
             this.lblElapsed.Size = new System.Drawing.Size(49, 13);
             this.lblElapsed.TabIndex = 45;
@@ -481,7 +528,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(150, 70);
+            this.label8.Location = new System.Drawing.Point(152, 70);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(48, 13);
             this.label8.TabIndex = 46;
@@ -501,11 +548,11 @@
             // 
             this.tbLaserPwr.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbLaserPwr.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbLaserPwr.Location = new System.Drawing.Point(47, 65);
-            this.tbLaserPwr.MaxLength = 3;
+            this.tbLaserPwr.Location = new System.Drawing.Point(43, 65);
+            this.tbLaserPwr.MaxLength = 4;
             this.tbLaserPwr.Name = "tbLaserPwr";
             this.tbLaserPwr.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbLaserPwr.Size = new System.Drawing.Size(28, 23);
+            this.tbLaserPwr.Size = new System.Drawing.Size(33, 23);
             this.tbLaserPwr.TabIndex = 55;
             this.tbLaserPwr.Text = "0";
             this.tbLaserPwr.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -527,7 +574,7 @@
             this.gbConecction.Controls.Add(this.cbBaud);
             this.gbConecction.Controls.Add(this.cbPort);
             this.gbConecction.Controls.Add(this.bOpenPort);
-            this.gbConecction.Location = new System.Drawing.Point(3, 7);
+            this.gbConecction.Location = new System.Drawing.Point(3, 28);
             this.gbConecction.Name = "gbConecction";
             this.gbConecction.Size = new System.Drawing.Size(252, 50);
             this.gbConecction.TabIndex = 58;
@@ -538,9 +585,9 @@
             // 
             this.bRefreshport.BackgroundImage = global::_3dpBurner.Properties.Resources.refresh;
             this.bRefreshport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.bRefreshport.Location = new System.Drawing.Point(215, 15);
+            this.bRefreshport.Location = new System.Drawing.Point(217, 17);
             this.bRefreshport.Name = "bRefreshport";
-            this.bRefreshport.Size = new System.Drawing.Size(29, 27);
+            this.bRefreshport.Size = new System.Drawing.Size(25, 23);
             this.bRefreshport.TabIndex = 56;
             this.bRefreshport.UseVisualStyleBackColor = true;
             this.bRefreshport.Click += new System.EventHandler(this.bRefreshport_Click);
@@ -551,7 +598,7 @@
             this.gbLaserControl.Controls.Add(this.tbLaserPwr);
             this.gbLaserControl.Controls.Add(this.btsLaserOff);
             this.gbLaserControl.Controls.Add(this.btnLaserOn);
-            this.gbLaserControl.Location = new System.Drawing.Point(453, 7);
+            this.gbLaserControl.Location = new System.Drawing.Point(453, 28);
             this.gbLaserControl.Name = "gbLaserControl";
             this.gbLaserControl.Size = new System.Drawing.Size(158, 96);
             this.gbLaserControl.TabIndex = 59;
@@ -561,9 +608,9 @@
             // btnLaserPwr
             // 
             this.btnLaserPwr.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLaserPwr.Location = new System.Drawing.Point(6, 63);
+            this.btnLaserPwr.Location = new System.Drawing.Point(4, 63);
             this.btnLaserPwr.Name = "btnLaserPwr";
-            this.btnLaserPwr.Size = new System.Drawing.Size(39, 27);
+            this.btnLaserPwr.Size = new System.Drawing.Size(38, 27);
             this.btnLaserPwr.TabIndex = 56;
             this.btnLaserPwr.Text = "PWR";
             this.btnLaserPwr.UseVisualStyleBackColor = true;
@@ -572,7 +619,7 @@
             // tbCommand
             // 
             this.tbCommand.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbCommand.Location = new System.Drawing.Point(78, 134);
+            this.tbCommand.Location = new System.Drawing.Point(78, 135);
             this.tbCommand.Name = "tbCommand";
             this.tbCommand.Size = new System.Drawing.Size(254, 20);
             this.tbCommand.TabIndex = 27;
@@ -584,7 +631,7 @@
             this.gbConsole.Controls.Add(this.btlClearLog);
             this.gbConsole.Controls.Add(this.bSendCmd);
             this.gbConsole.Controls.Add(this.tbCommand);
-            this.gbConsole.Location = new System.Drawing.Point(3, 185);
+            this.gbConsole.Location = new System.Drawing.Point(3, 204);
             this.gbConsole.Name = "gbConsole";
             this.gbConsole.Size = new System.Drawing.Size(386, 163);
             this.gbConsole.TabIndex = 60;
@@ -616,7 +663,7 @@
             // 
             // btlClearLog
             // 
-            this.btlClearLog.Location = new System.Drawing.Point(6, 132);
+            this.btlClearLog.Location = new System.Drawing.Point(6, 133);
             this.btlClearLog.Name = "btlClearLog";
             this.btlClearLog.Size = new System.Drawing.Size(66, 24);
             this.btlClearLog.TabIndex = 29;
@@ -626,15 +673,39 @@
             // 
             // gbReference
             // 
+            this.gbReference.Controls.Add(this.btnZeroZ);
+            this.gbReference.Controls.Add(this.btnZeroXY);
             this.gbReference.Controls.Add(this.btnZero);
             this.gbReference.Controls.Add(this.bHome);
             this.gbReference.Controls.Add(this.btnUnlock);
-            this.gbReference.Location = new System.Drawing.Point(452, 109);
+            this.gbReference.Location = new System.Drawing.Point(452, 130);
             this.gbReference.Name = "gbReference";
             this.gbReference.Size = new System.Drawing.Size(158, 69);
             this.gbReference.TabIndex = 61;
             this.gbReference.TabStop = false;
             this.gbReference.Text = "Reference";
+            // 
+            // btnZeroZ
+            // 
+            this.btnZeroZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnZeroZ.Location = new System.Drawing.Point(53, 42);
+            this.btnZeroZ.Name = "btnZeroZ";
+            this.btnZeroZ.Size = new System.Drawing.Size(52, 20);
+            this.btnZeroZ.TabIndex = 33;
+            this.btnZeroZ.Text = "ZeroZ";
+            this.btnZeroZ.UseVisualStyleBackColor = true;
+            this.btnZeroZ.Click += new System.EventHandler(this.btnZeroZ_Click);
+            // 
+            // btnZeroXY
+            // 
+            this.btnZeroXY.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnZeroXY.Location = new System.Drawing.Point(53, 17);
+            this.btnZeroXY.Name = "btnZeroXY";
+            this.btnZeroXY.Size = new System.Drawing.Size(52, 25);
+            this.btnZeroXY.TabIndex = 32;
+            this.btnZeroXY.Text = "ZeroXY";
+            this.btnZeroXY.UseVisualStyleBackColor = true;
+            this.btnZeroXY.Click += new System.EventHandler(this.btnZeroXY_Click);
             // 
             // btnZero
             // 
@@ -653,18 +724,132 @@
             this.gbCustom.Controls.Add(this.tbCustom1);
             this.gbCustom.Controls.Add(this.btnCustom2);
             this.gbCustom.Controls.Add(this.btnCustom1);
-            this.gbCustom.Location = new System.Drawing.Point(396, 185);
+            this.gbCustom.Location = new System.Drawing.Point(396, 204);
             this.gbCustom.Name = "gbCustom";
             this.gbCustom.Size = new System.Drawing.Size(215, 75);
             this.gbCustom.TabIndex = 62;
             this.gbCustom.TabStop = false;
             this.gbCustom.Text = "Custom";
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.modeToolStripMenuItem,
+            this.settingsToolStripMenuItem,
+            this.helpToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(615, 24);
+            this.menuStrip1.TabIndex = 63;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // modeToolStripMenuItem
+            // 
+            this.modeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.axisMillToolStripMenuItem,
+            this.axisLaserPWRSToolStripMenuItem,
+            this.axisLaserPWRZToolStripMenuItem,
+            this.axisLaserToolStripMenuItem});
+            this.modeToolStripMenuItem.Name = "modeToolStripMenuItem";
+            this.modeToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.modeToolStripMenuItem.Text = "Mode";
+            // 
+            // axisMillToolStripMenuItem
+            // 
+            this.axisMillToolStripMenuItem.CheckOnClick = true;
+            this.axisMillToolStripMenuItem.Name = "axisMillToolStripMenuItem";
+            this.axisMillToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.axisMillToolStripMenuItem.Text = "3axisMill";
+            this.axisMillToolStripMenuItem.Click += new System.EventHandler(this.axisMillToolStripMenuItem_Click);
+            // 
+            // axisLaserPWRSToolStripMenuItem
+            // 
+            this.axisLaserPWRSToolStripMenuItem.Checked = true;
+            this.axisLaserPWRSToolStripMenuItem.CheckOnClick = true;
+            this.axisLaserPWRSToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.axisLaserPWRSToolStripMenuItem.Name = "axisLaserPWRSToolStripMenuItem";
+            this.axisLaserPWRSToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.axisLaserPWRSToolStripMenuItem.Text = "2axisLaserPWR_S";
+            this.axisLaserPWRSToolStripMenuItem.Click += new System.EventHandler(this.axisLaserPWRSToolStripMenuItem_Click);
+            // 
+            // axisLaserPWRZToolStripMenuItem
+            // 
+            this.axisLaserPWRZToolStripMenuItem.CheckOnClick = true;
+            this.axisLaserPWRZToolStripMenuItem.Name = "axisLaserPWRZToolStripMenuItem";
+            this.axisLaserPWRZToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.axisLaserPWRZToolStripMenuItem.Text = "2axisLaserPWR_Z";
+            this.axisLaserPWRZToolStripMenuItem.Click += new System.EventHandler(this.axisLaserPWRZToolStripMenuItem_Click);
+            // 
+            // axisLaserToolStripMenuItem
+            // 
+            this.axisLaserToolStripMenuItem.CheckOnClick = true;
+            this.axisLaserToolStripMenuItem.Name = "axisLaserToolStripMenuItem";
+            this.axisLaserToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.axisLaserToolStripMenuItem.Text = "3axisLaser";
+            this.axisLaserToolStripMenuItem.Click += new System.EventHandler(this.axisLaserToolStripMenuItem_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.restoreSettingsToolStripMenuItem});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // restoreSettingsToolStripMenuItem
+            // 
+            this.restoreSettingsToolStripMenuItem.Name = "restoreSettingsToolStripMenuItem";
+            this.restoreSettingsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.restoreSettingsToolStripMenuItem.Text = "Restore Settings";
+            this.restoreSettingsToolStripMenuItem.Click += new System.EventHandler(this.restoreSettingsToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.BackColor = System.Drawing.SystemColors.Control;
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel2,
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 363);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(615, 22);
+            this.statusStrip1.SizingGrip = false;
+            this.statusStrip1.TabIndex = 64;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(28, 17);
+            this.toolStripStatusLabel1.Text = "       ";
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(42, 17);
+            this.toolStripStatusLabel2.Text = "Status:";
+            // 
             // frm3dpBurner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(615, 350);
+            this.ClientSize = new System.Drawing.Size(615, 385);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.gbCustom);
             this.Controls.Add(this.gbReference);
             this.Controls.Add(this.gbConsole);
@@ -673,8 +858,11 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.gbJog);
             this.Controls.Add(this.btnReset);
+            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "frm3dpBurner";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "3dpBurner";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm3dpBurner_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -691,7 +879,12 @@
             this.gbReference.ResumeLayout(false);
             this.gbCustom.ResumeLayout(false);
             this.gbCustom.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -749,6 +942,23 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RichTextBox rtbLog;
         private System.Windows.Forms.Label lblBuf;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem modeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem axisMillToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem axisLaserPWRSToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem axisLaserPWRZToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem axisLaserToolStripMenuItem;
+        private System.Windows.Forms.Button btnZdown;
+        private System.Windows.Forms.Button btnZup;
+        private System.Windows.Forms.Button btnZeroZ;
+        private System.Windows.Forms.Button btnZeroXY;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem restoreSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
     }
 }
 

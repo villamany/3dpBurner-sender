@@ -1,5 +1,9 @@
-﻿//Changelog v0.1.1 to 0.1.2development
+﻿//Changelog v0.1.1 to 0.2development
 
+//Lasst change
+//Visual improvments
+//Added support for 2 and 3 axis laser cutter and 3 axis milling
+//----------Commit
 //Minor code cleanup
 //----------Commit
 //introduced a bug, bad logging of commands
@@ -8,6 +12,8 @@
 //----------Commit
 //Code cleanup
 //Some stability issues fixed
+
+//First change
  
 using System;
 using System.Collections.Generic;
@@ -26,7 +32,7 @@ namespace _3dpBurner
 {
     public partial class frm3dpBurner : Form
     {
-        const string ver = "0.1.2development";//app version
+        const string ver = "0.2development";//app version
         string rxString;
         List<string> fileLines;
         Int32 fileLinesCount;//for file streaming control
@@ -104,8 +110,8 @@ namespace _3dpBurner
 
             tbCommand.Enabled = serialPort1.IsOpen && !transfer;
             bSendCmd.Enabled = tbCommand.Enabled;     
-  
-
+            
+            restoreSettingsToolStripMenuItem.Enabled=!serialPort1.IsOpen;
         }
         //Update file progress (progressBars and labels)
         private void updateProgress()
@@ -125,15 +131,7 @@ namespace _3dpBurner
             //staus message?
             if ((rxString.Length > 0) && (rxString[0] == '<'))
             {
-                Text = "3dpBurner Sender v" + ver+"     "+ rxString;
-                dataProcessing = false;
-                return;
-            }
-            //jogging response?
-            if (jogging)
-            {
-                jogging = false;
-                serialPort1.Write("G90\r");//add a G90 absolute coords command
+                toolStripStatusLabel1.Text =rxString;
                 dataProcessing = false;
                 return;
             }
@@ -144,8 +142,17 @@ namespace _3dpBurner
                 rtbLog.AppendText("\r");
                 rtbLog.ScrollToCaret();
                 dataProcessing = false;
+            }
+            //jogging response?
+            if (jogging)
+            {
+                jogging = false;
+                sendLine("G90");//add a G90 absolute coords command
+                dataProcessing = false;
                 return;
             }
+            //if no transfer, no any more to do
+            if (!transfer) return;
             //line transfer response
             if (rxString != "ok")//Add line-response only if not ok (if many lines the stream procces is slowly)
             {
@@ -283,7 +290,7 @@ namespace _3dpBurner
         {
             Text = "3dpBurner Sender v" + ver;
             bHome.Text = "Go\r\nHome";
-            btnZero.Text = "Zero\r\nCoord";
+            btnZero.Text = "Zero\r\nXY";
             btnUnlock.Text = "Unlock\r\nAlarm";
             refreshPorts();
             pbBufer.Maximum = grblBuferSize;
@@ -295,7 +302,8 @@ namespace _3dpBurner
         private void loadSettings()
         {
             try
-            {          
+            {   
+                string mode;
                 cbPort.Text = Properties.Settings1.Default.port;
                 cbBaud.Text = Properties.Settings1.Default.baud;
                 tbFile.Text = Properties.Settings1.Default.file;
@@ -303,6 +311,26 @@ namespace _3dpBurner
                 tbLaserPwr.Text = Properties.Settings1.Default.pwr;
                 tbCustom1.Text = Properties.Settings1.Default.custom1;
                 tbCustom2.Text = Properties.Settings1.Default.custom2;
+                mode = Properties.Settings1.Default.mode;
+                if (mode==axisMillToolStripMenuItem.Text)
+                {
+                    selectMode(axisMillToolStripMenuItem);
+                }
+                else
+                    if (mode==axisLaserPWRSToolStripMenuItem.Text)
+                    {
+                        selectMode(axisLaserPWRSToolStripMenuItem);
+                    }
+                    else
+                        if (mode == axisLaserPWRZToolStripMenuItem.Text)
+                        {
+                            selectMode(axisLaserPWRZToolStripMenuItem);
+                        }
+                        else
+                            if (mode == axisLaserToolStripMenuItem.Text)
+                            {
+                                selectMode(axisLaserToolStripMenuItem);
+                            }
             }
             catch (Exception e)
             {
@@ -314,6 +342,12 @@ namespace _3dpBurner
         {
             try
             {
+                string mode="";//get selected mode
+                if(axisMillToolStripMenuItem.Checked) mode=axisMillToolStripMenuItem.Text;//3 axis mill
+                else if (axisLaserPWRSToolStripMenuItem.Checked) mode = axisLaserPWRSToolStripMenuItem.Text;//2 axis laser power with S
+                else if (axisLaserPWRZToolStripMenuItem.Checked) mode = axisLaserPWRZToolStripMenuItem.Text;//2 axis laser power with Z
+                else if (axisLaserToolStripMenuItem.Checked) mode = axisLaserToolStripMenuItem.Text;//3 axis laser
+
                 Properties.Settings1.Default.port = cbPort.Text;
                 Properties.Settings1.Default.baud = cbBaud.Text;
                 Properties.Settings1.Default.file = tbFile.Text;
@@ -321,7 +355,9 @@ namespace _3dpBurner
                 Properties.Settings1.Default.pwr = tbLaserPwr.Text;
                 Properties.Settings1.Default.custom1 = tbCustom1.Text;
                 Properties.Settings1.Default.custom2 = tbCustom2.Text;
+                Properties.Settings1.Default.mode = mode;
                 Properties.Settings1.Default.Save();
+                
             }
             catch (Exception e)
             {
@@ -409,7 +445,6 @@ namespace _3dpBurner
         //Fornm on close
         private void frm3dpBurner_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //ClosePort(); return;
             saveSettings();
             if (transfer)
             {
@@ -514,8 +549,8 @@ namespace _3dpBurner
                 catch (Exception er)
                 {
                     logError("Retrieving GRBL status", er);
-                    serialPort1.Close();
-                    updateControls();
+                    //serialPort1.Close();
+                    //  updateControls();
                 }
             }          
         }
@@ -554,7 +589,7 @@ namespace _3dpBurner
         //Homing button
         private void btnZero_Click(object sender, EventArgs e)
         {
-            sendLine("G92X0Y0Z0");
+            sendLine("G92X0Y0");
         }
         //Clear log button
         private void btlClearLog_Click(object sender, EventArgs e)
@@ -564,7 +599,119 @@ namespace _3dpBurner
         //Laser PWR button
         private void btnLaserPwr_Click(object sender, EventArgs e)
         {
-            sendLine("S" + tbLaserPwr.Text);
+            //Mode 3axisMill or 2axisLaserPwrZ
+            if (axisMillToolStripMenuItem.Checked | axisLaserPWRZToolStripMenuItem.Checked) sendLine("Z" + tbLaserPwr.Text);
+            //Mode 2axisLaserPwrS or 3axisLaser
+            else
+                sendLine("S" + tbLaserPwr.Text);
+        }
+        //Select mode (enable/disable and mod user controls for the specified mode)
+        private void selectMode(ToolStripMenuItem mode)
+        {
+            axisMillToolStripMenuItem.Checked=false;
+            axisLaserPWRSToolStripMenuItem.Checked=false;
+            axisLaserPWRZToolStripMenuItem.Checked=false;
+            axisLaserToolStripMenuItem.Checked = false;
+            mode.Checked = true;
+                //3axis mode? (mode 3axisMill or 3axisLaser). Show 3axis controls
+                if(mode==axisMillToolStripMenuItem|mode==axisLaserToolStripMenuItem)
+                {
+                    btnZdown.Visible = true;
+                    btnZup.Visible = true;
+                    btnZero.Visible=false;
+                    btnZeroXY.Visible = true;
+                    btnZeroZ.Visible = true;
+                    bXup.Location = new Point(51, 66);
+                    bXdown.Location = new Point(5, 66);
+                    bYup.Location = new Point(29, 21);
+                    bYdown.Location = new Point(29, 111);
+                    tbStepSize.Location = new Point(98, 125);
+                }
+                //2axis mode (mode 2axisLaserPwrS or 2axisLaserPwrZ).Show 2axis controls
+                else
+                {
+                    btnZdown.Visible = false;
+                    btnZup.Visible = false;
+                    btnZero.Visible=true;
+                    btnZeroXY.Visible = false;
+                    btnZeroZ.Visible = false;
+                    bXup.Location = new Point(96, 66);
+                    bXdown.Location = new Point(4, 66);
+                    bYup.Location = new Point(50, 21);
+                    bYdown.Location = new Point(50, 111);
+                    tbStepSize.Location = new Point(52, 76);
+                }
+                //Laser mode? (Mode 2axisLaserPwrS or 2axisLaserPwrZ or 3axisLaser). Rename laser controls
+                if (mode==axisLaserPWRSToolStripMenuItem | mode==axisLaserPWRZToolStripMenuItem | mode==axisLaserToolStripMenuItem)
+                    {
+                        gbLaserControl.Text = "Laser";
+                        btnLaserPwr.Text = "PWR";
+                    }
+                //Mill mode? (3axisMill). Rename mill controls
+                else
+                    {
+                        btnZdown.Visible = true;
+                        btnZup.Visible = true;
+                        gbLaserControl.Text = "Spindle";
+                        btnLaserPwr.Text = "RPM";
+                    }
+        }
+        //Mode 3axisMill Selection. Standard 3 axis mill mode
+        private void axisMillToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            selectMode(axisMillToolStripMenuItem);
+        }
+        //Mode 2axisLaserPwrS Selection. 2 axis laser using "Sx" as power set command
+        private void axisLaserPWRSToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            selectMode(axisLaserPWRSToolStripMenuItem);
+        }
+        //Mode 2axisLaserPwrZ Selection. 2 axis laser using "Zx" as power set command
+        private void axisLaserPWRZToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            selectMode(axisLaserPWRZToolStripMenuItem);
+        }
+        //Mode 3axisLaser Selection. 3 axis laser (use "Sx" as power set command)
+        private void axisLaserToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            selectMode(axisLaserToolStripMenuItem);
+        }
+        //Jog Z+ button
+        private void btnZup_Click(object sender, EventArgs e)
+        {
+            jogging = true;
+            sendLine("G91G0Z+" + tbStepSize.Text);    
+        }
+        //Jog Z- button
+        private void btnZdown_Click(object sender, EventArgs e)
+        {
+            jogging = true;
+            sendLine("G91G0Z-" + tbStepSize.Text); 
+        }
+        //Zero XY button
+        private void btnZeroXY_Click(object sender, EventArgs e)
+        {
+            sendLine("G92X0Y0");
+        }
+        //Zero Z button
+        private void btnZeroZ_Click(object sender, EventArgs e)
+        {
+            sendLine("G92Z0");
+        }
+        //Restore settings
+        private void restoreSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Restore Settings?", "Restore Settings", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK) return;
+            Properties.Settings1.Default.Reset();
+            Properties.Settings1.Default.Save();
+            loadSettings();
+
+        }
+        //About dialog
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmAbout frmAb = new frmAbout();
+            frmAb.ShowDialog();
         }  
     }
 }
