@@ -1,5 +1,7 @@
 ﻿//Changelog v0.1.1 to 0.1.2development
 
+//Minor code cleanup
+//----------Commit
 //introduced a bug, bad logging of commands
 //----------Commit
 //Last commit introduced a bug by not saving settings on exit when serial port is closed
@@ -176,7 +178,6 @@ namespace _3dpBurner
                 serialPort1.Write(fileLines[fileLinesSent] + "\r");
                 bufFree -= (fileLines[fileLinesSent].Length + 1);
                 fileLinesSent++;
-                updateControls();
             }
         }
         //Rx from serial port
@@ -206,8 +207,7 @@ namespace _3dpBurner
                 }
              }
         }
-        //Send a line adding a CR
-        //Send a line adding the enter key and log in console
+        //Send a line adding a CR and log it
         private void sendLine(string data)
         {
             serialPort1.Write(data + "\r");
@@ -223,6 +223,7 @@ namespace _3dpBurner
                 serialPort1.Open();
                 dataProcessing = true;
                 grblReset();
+                updateControls();
                 return (true);
             }
             catch (Exception err)
@@ -237,7 +238,6 @@ namespace _3dpBurner
             {
                 if (serialPort1.IsOpen)
                 {
-                    grblReset();
                     serialPort1.Close();                  
                 }
                 updateControls();
@@ -261,11 +261,9 @@ namespace _3dpBurner
         private void button1_Click(object sender, EventArgs e)
         {
             if (serialPort1.IsOpen) 
-                {
-                    ClosePort();
-                    return;
-                }
-            if (OpenPort())updateControls();                  
+                ClosePort();
+            else
+            OpenPort();                  
         }
         //Refresh port names
         private void refreshPorts()
