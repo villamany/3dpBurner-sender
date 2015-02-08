@@ -1,4 +1,24 @@
-﻿namespace _3dpBurner
+﻿/*  3dpBurner Sender. A GCODE sender for GRBL based devices.
+    This file is part of 3dpBurner Sender application.
+   
+    Copyright (C) 2014-2015  Adrian V. J. (villamany) contact: villamany@gmail.com
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+//Form 1 (Main form) design
+
+namespace _3dpBurner
 {
     partial class frm3dpBurner
     {
@@ -97,8 +117,8 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.gbJog.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbConecction.SuspendLayout();
@@ -151,8 +171,8 @@
             // 
             this.serialPort1.BaudRate = 115200;
             this.serialPort1.ReadBufferSize = 2048;
-            this.serialPort1.ReadTimeout = 1000;
-            this.serialPort1.WriteTimeout = 1000;
+            this.serialPort1.ReadTimeout = 3000;
+            this.serialPort1.WriteTimeout = 3000;
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
             // bXdown
@@ -832,22 +852,23 @@
             this.statusStrip1.TabIndex = 64;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(28, 17);
-            this.toolStripStatusLabel1.Text = "       ";
-            // 
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(42, 17);
             this.toolStripStatusLabel2.Text = "Status:";
             // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(28, 17);
+            this.toolStripStatusLabel1.Text = "       ";
+            // 
             // frm3dpBurner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(615, 385);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.gbCustom);

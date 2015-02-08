@@ -1,22 +1,23 @@
-﻿//Changelog v0.1.1 to 0.2development
+﻿/*  3dpBurner Sender. A GCODE sender for GRBL based devices.
+    This file is part of 3dpBurner Sender application.
+   
+    Copyright (C) 2014-2015  Adrian V. J. (villamany) contact: villamany@gmail.com
 
-//Lasst change
-//Bug fix. Setting the spindle speed on 3axisMill mode used 'Z' instead of 'S'
-//----------Commit
-//Visual improvments
-//Added support for 2 and 3 axis laser cutter and 3 axis milling
-//----------Commit
-//Minor code cleanup
-//----------Commit
-//introduced a bug, bad logging of commands
-//----------Commit
-//Last commit introduced a bug by not saving settings on exit when serial port is closed
-//----------Commit
-//Code cleanup
-//Some stability issues fixed
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-//First change
- 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+//Main form
+  
 using System;
 using System.Collections.Generic;
 //using System.ComponentModel;
