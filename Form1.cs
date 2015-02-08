@@ -1,6 +1,8 @@
 ﻿//Changelog v0.1.1 to 0.2development
 
 //Lasst change
+//Bug fix. Setting the spindle speed on 3axisMill mode used 'Z' instead of 'S'
+//----------Commit
 //Visual improvments
 //Added support for 2 and 3 axis laser cutter and 3 axis milling
 //----------Commit
@@ -599,11 +601,11 @@ namespace _3dpBurner
         //Laser PWR button
         private void btnLaserPwr_Click(object sender, EventArgs e)
         {
-            //Mode 3axisMill or 2axisLaserPwrZ
-            if (axisMillToolStripMenuItem.Checked | axisLaserPWRZToolStripMenuItem.Checked) sendLine("Z" + tbLaserPwr.Text);
-            //Mode 2axisLaserPwrS or 3axisLaser
+            //Mode 2axisLaserPwrZ
+            if (axisLaserPWRZToolStripMenuItem.Checked) sendLine("Z" + tbLaserPwr.Text);//Variable spindle PWM managed by 'Z'
+            //Mode 2axisLaserPwrS or 3axisLaser or 3axisMill
             else
-                sendLine("S" + tbLaserPwr.Text);
+                sendLine("S" + tbLaserPwr.Text);//Variable spindle PWM managed by 'Z'
         }
         //Select mode (enable/disable and mod user controls for the specified mode)
         private void selectMode(ToolStripMenuItem mode)
