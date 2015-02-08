@@ -35,7 +35,7 @@ namespace _3dpBurner
 {
     public partial class frm3dpBurner : Form
     {
-        const string ver = "0.2development";//app version
+        const string ver = "0.2";//app version
         string rxString;
         List<string> fileLines;
         Int32 fileLinesCount;//for file streaming control
