@@ -119,6 +119,8 @@ namespace _3dpBurner
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblRemaining = new System.Windows.Forms.Label();
             this.gbJog.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbConecction.SuspendLayout();
@@ -136,7 +138,7 @@ namespace _3dpBurner
             this.bOpenPort.Location = new System.Drawing.Point(148, 17);
             this.bOpenPort.Name = "bOpenPort";
             this.bOpenPort.Size = new System.Drawing.Size(64, 23);
-            this.bOpenPort.TabIndex = 0;
+            this.bOpenPort.TabIndex = 3;
             this.bOpenPort.Text = "Open";
             this.bOpenPort.UseVisualStyleBackColor = true;
             this.bOpenPort.Click += new System.EventHandler(this.button1_Click);
@@ -149,7 +151,7 @@ namespace _3dpBurner
             this.cbPort.Name = "cbPort";
             this.cbPort.Size = new System.Drawing.Size(64, 21);
             this.cbPort.TabIndex = 1;
-            this.cbPort.Text = "COM45";
+            this.cbPort.Text = "COM1";
             // 
             // cbBaud
             // 
@@ -182,7 +184,7 @@ namespace _3dpBurner
             this.bXdown.Location = new System.Drawing.Point(5, 66);
             this.bXdown.Name = "bXdown";
             this.bXdown.Size = new System.Drawing.Size(44, 44);
-            this.bXdown.TabIndex = 7;
+            this.bXdown.TabIndex = 2;
             this.bXdown.Text = "X-";
             this.bXdown.UseVisualStyleBackColor = false;
             this.bXdown.Click += new System.EventHandler(this.bXdown_Click);
@@ -194,7 +196,7 @@ namespace _3dpBurner
             this.bXup.Location = new System.Drawing.Point(51, 66);
             this.bXup.Name = "bXup";
             this.bXup.Size = new System.Drawing.Size(44, 44);
-            this.bXup.TabIndex = 8;
+            this.bXup.TabIndex = 3;
             this.bXup.Text = "X+";
             this.bXup.UseVisualStyleBackColor = false;
             this.bXup.Click += new System.EventHandler(this.bXup_Click);
@@ -206,7 +208,7 @@ namespace _3dpBurner
             this.bYup.Location = new System.Drawing.Point(29, 21);
             this.bYup.Name = "bYup";
             this.bYup.Size = new System.Drawing.Size(44, 44);
-            this.bYup.TabIndex = 9;
+            this.bYup.TabIndex = 1;
             this.bYup.Text = "Y+";
             this.bYup.UseVisualStyleBackColor = false;
             this.bYup.Click += new System.EventHandler(this.bYup_Click);
@@ -219,7 +221,7 @@ namespace _3dpBurner
             this.bYdown.Location = new System.Drawing.Point(29, 111);
             this.bYdown.Name = "bYdown";
             this.bYdown.Size = new System.Drawing.Size(44, 44);
-            this.bYdown.TabIndex = 10;
+            this.bYdown.TabIndex = 4;
             this.bYdown.Text = "Y-";
             this.bYdown.UseVisualStyleBackColor = false;
             this.bYdown.Click += new System.EventHandler(this.bYdown_Click);
@@ -229,7 +231,7 @@ namespace _3dpBurner
             this.btnLaserOn.Location = new System.Drawing.Point(6, 17);
             this.btnLaserOn.Name = "btnLaserOn";
             this.btnLaserOn.Size = new System.Drawing.Size(67, 44);
-            this.btnLaserOn.TabIndex = 11;
+            this.btnLaserOn.TabIndex = 1;
             this.btnLaserOn.Text = "On";
             this.btnLaserOn.UseVisualStyleBackColor = true;
             this.btnLaserOn.Click += new System.EventHandler(this.btnLaserOn_Click);
@@ -240,7 +242,7 @@ namespace _3dpBurner
             this.btsLaserOff.Location = new System.Drawing.Point(79, 16);
             this.btsLaserOff.Name = "btsLaserOff";
             this.btsLaserOff.Size = new System.Drawing.Size(73, 72);
-            this.btsLaserOff.TabIndex = 12;
+            this.btsLaserOff.TabIndex = 2;
             this.btsLaserOff.Text = "Off";
             this.btsLaserOff.UseVisualStyleBackColor = true;
             this.btsLaserOff.Click += new System.EventHandler(this.btsLaserOff_Click);
@@ -250,7 +252,7 @@ namespace _3dpBurner
             this.btnCustom1.Location = new System.Drawing.Point(6, 19);
             this.btnCustom1.Name = "btnCustom1";
             this.btnCustom1.Size = new System.Drawing.Size(97, 23);
-            this.btnCustom1.TabIndex = 14;
+            this.btnCustom1.TabIndex = 1;
             this.btnCustom1.Text = "Custom1";
             this.btnCustom1.UseVisualStyleBackColor = true;
             this.btnCustom1.Click += new System.EventHandler(this.btnCustom1_Click);
@@ -261,7 +263,7 @@ namespace _3dpBurner
             this.btnUnlock.Location = new System.Drawing.Point(105, 17);
             this.btnUnlock.Name = "btnUnlock";
             this.btnUnlock.Size = new System.Drawing.Size(48, 45);
-            this.btnUnlock.TabIndex = 16;
+            this.btnUnlock.TabIndex = 6;
             this.btnUnlock.Text = "Unlock";
             this.btnUnlock.UseVisualStyleBackColor = true;
             this.btnUnlock.Click += new System.EventHandler(this.button11_Click);
@@ -272,14 +274,14 @@ namespace _3dpBurner
             this.tbFile.Location = new System.Drawing.Point(7, 15);
             this.tbFile.Name = "tbFile";
             this.tbFile.Size = new System.Drawing.Size(203, 20);
-            this.tbFile.TabIndex = 20;
+            this.tbFile.TabIndex = 1;
             // 
             // bOpenfile
             // 
             this.bOpenfile.Location = new System.Drawing.Point(214, 13);
             this.bOpenfile.Name = "bOpenfile";
             this.bOpenfile.Size = new System.Drawing.Size(30, 23);
-            this.bOpenfile.TabIndex = 43;
+            this.bOpenfile.TabIndex = 2;
             this.bOpenfile.Text = "...";
             this.bOpenfile.Click += new System.EventHandler(this.bOpenfile_Click);
             // 
@@ -288,7 +290,7 @@ namespace _3dpBurner
             this.bStart.Location = new System.Drawing.Point(7, 42);
             this.bStart.Name = "bStart";
             this.bStart.Size = new System.Drawing.Size(75, 23);
-            this.bStart.TabIndex = 23;
+            this.bStart.TabIndex = 3;
             this.bStart.Text = "Start";
             this.bStart.UseVisualStyleBackColor = true;
             this.bStart.Click += new System.EventHandler(this.bStar_Click);
@@ -298,7 +300,7 @@ namespace _3dpBurner
             this.bSendCmd.Location = new System.Drawing.Point(334, 133);
             this.bSendCmd.Name = "bSendCmd";
             this.bSendCmd.Size = new System.Drawing.Size(44, 23);
-            this.bSendCmd.TabIndex = 28;
+            this.bSendCmd.TabIndex = 4;
             this.bSendCmd.Text = "Send";
             this.bSendCmd.UseVisualStyleBackColor = true;
             this.bSendCmd.Click += new System.EventHandler(this.bSendCmd_Click);
@@ -309,7 +311,7 @@ namespace _3dpBurner
             this.bHome.Location = new System.Drawing.Point(5, 17);
             this.bHome.Name = "bHome";
             this.bHome.Size = new System.Drawing.Size(48, 45);
-            this.bHome.TabIndex = 30;
+            this.bHome.TabIndex = 1;
             this.bHome.Text = "GoHome";
             this.bHome.UseVisualStyleBackColor = true;
             this.bHome.Click += new System.EventHandler(this.bHome_Click);
@@ -322,7 +324,7 @@ namespace _3dpBurner
             this.tbStepSize.MaxLength = 3;
             this.tbStepSize.Name = "tbStepSize";
             this.tbStepSize.Size = new System.Drawing.Size(40, 23);
-            this.tbStepSize.TabIndex = 31;
+            this.tbStepSize.TabIndex = 7;
             this.tbStepSize.Text = "1";
             this.tbStepSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -338,7 +340,7 @@ namespace _3dpBurner
             // pbBufer
             // 
             this.pbBufer.BackColor = System.Drawing.SystemColors.Control;
-            this.pbBufer.Location = new System.Drawing.Point(115, 49);
+            this.pbBufer.Location = new System.Drawing.Point(115, 45);
             this.pbBufer.Name = "pbBufer";
             this.pbBufer.Size = new System.Drawing.Size(105, 8);
             this.pbBufer.Step = 1;
@@ -349,7 +351,7 @@ namespace _3dpBurner
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(90, 46);
+            this.label7.Location = new System.Drawing.Point(90, 42);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(26, 13);
             this.label7.TabIndex = 43;
@@ -360,7 +362,7 @@ namespace _3dpBurner
             this.btnCustom2.Location = new System.Drawing.Point(110, 19);
             this.btnCustom2.Name = "btnCustom2";
             this.btnCustom2.Size = new System.Drawing.Size(97, 23);
-            this.btnCustom2.TabIndex = 44;
+            this.btnCustom2.TabIndex = 3;
             this.btnCustom2.Text = "Custom2";
             this.btnCustom2.UseVisualStyleBackColor = true;
             this.btnCustom2.Click += new System.EventHandler(this.btnCustom2_Click);
@@ -372,7 +374,7 @@ namespace _3dpBurner
             this.tbCustom1.MaxLength = 79;
             this.tbCustom1.Name = "tbCustom1";
             this.tbCustom1.Size = new System.Drawing.Size(97, 20);
-            this.tbCustom1.TabIndex = 45;
+            this.tbCustom1.TabIndex = 2;
             this.tbCustom1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCustom1_KeyPress);
             // 
             // tbCustom2
@@ -382,7 +384,7 @@ namespace _3dpBurner
             this.tbCustom2.MaxLength = 79;
             this.tbCustom2.Name = "tbCustom2";
             this.tbCustom2.Size = new System.Drawing.Size(97, 20);
-            this.tbCustom2.TabIndex = 46;
+            this.tbCustom2.TabIndex = 4;
             this.tbCustom2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCustom2_KeyPress);
             // 
             // btnReset
@@ -390,10 +392,10 @@ namespace _3dpBurner
             this.btnReset.BackColor = System.Drawing.Color.Red;
             this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReset.ForeColor = System.Drawing.Color.Yellow;
-            this.btnReset.Location = new System.Drawing.Point(395, 281);
+            this.btnReset.Location = new System.Drawing.Point(395, 282);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(214, 81);
-            this.btnReset.TabIndex = 47;
+            this.btnReset.Size = new System.Drawing.Size(214, 84);
+            this.btnReset.TabIndex = 8;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = false;
             this.btnReset.Click += new System.EventHandler(this.button5_Click);
@@ -403,7 +405,7 @@ namespace _3dpBurner
             this.button12.Location = new System.Drawing.Point(145, 15);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(35, 20);
-            this.button12.TabIndex = 48;
+            this.button12.TabIndex = 8;
             this.button12.Text = ".01";
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Click += new System.EventHandler(this.button12_Click);
@@ -413,7 +415,7 @@ namespace _3dpBurner
             this.button19.Location = new System.Drawing.Point(145, 41);
             this.button19.Name = "button19";
             this.button19.Size = new System.Drawing.Size(35, 20);
-            this.button19.TabIndex = 49;
+            this.button19.TabIndex = 9;
             this.button19.Text = ".1";
             this.button19.UseVisualStyleBackColor = true;
             this.button19.Click += new System.EventHandler(this.button19_Click);
@@ -423,7 +425,7 @@ namespace _3dpBurner
             this.button20.Location = new System.Drawing.Point(145, 66);
             this.button20.Name = "button20";
             this.button20.Size = new System.Drawing.Size(35, 20);
-            this.button20.TabIndex = 50;
+            this.button20.TabIndex = 10;
             this.button20.Text = "1";
             this.button20.UseVisualStyleBackColor = true;
             this.button20.Click += new System.EventHandler(this.button20_Click);
@@ -433,7 +435,7 @@ namespace _3dpBurner
             this.button21.Location = new System.Drawing.Point(145, 117);
             this.button21.Name = "button21";
             this.button21.Size = new System.Drawing.Size(35, 20);
-            this.button21.TabIndex = 51;
+            this.button21.TabIndex = 12;
             this.button21.Text = "10";
             this.button21.UseVisualStyleBackColor = true;
             this.button21.Click += new System.EventHandler(this.button21_Click);
@@ -443,7 +445,7 @@ namespace _3dpBurner
             this.button22.Location = new System.Drawing.Point(145, 142);
             this.button22.Name = "button22";
             this.button22.Size = new System.Drawing.Size(35, 20);
-            this.button22.TabIndex = 52;
+            this.button22.TabIndex = 13;
             this.button22.Text = "100";
             this.button22.UseVisualStyleBackColor = true;
             this.button22.Click += new System.EventHandler(this.button22_Click);
@@ -468,7 +470,7 @@ namespace _3dpBurner
             this.gbJog.Location = new System.Drawing.Point(261, 28);
             this.gbJog.Name = "gbJog";
             this.gbJog.Size = new System.Drawing.Size(186, 171);
-            this.gbJog.TabIndex = 53;
+            this.gbJog.TabIndex = 3;
             this.gbJog.TabStop = false;
             this.gbJog.Text = "Motion";
             // 
@@ -480,7 +482,7 @@ namespace _3dpBurner
             this.btnZdown.Location = new System.Drawing.Point(99, 67);
             this.btnZdown.Name = "btnZdown";
             this.btnZdown.Size = new System.Drawing.Size(38, 34);
-            this.btnZdown.TabIndex = 55;
+            this.btnZdown.TabIndex = 6;
             this.btnZdown.Text = "Z-";
             this.btnZdown.UseVisualStyleBackColor = false;
             this.btnZdown.Click += new System.EventHandler(this.btnZdown_Click);
@@ -493,7 +495,7 @@ namespace _3dpBurner
             this.btnZup.Location = new System.Drawing.Point(99, 27);
             this.btnZup.Name = "btnZup";
             this.btnZup.Size = new System.Drawing.Size(38, 34);
-            this.btnZup.TabIndex = 54;
+            this.btnZup.TabIndex = 5;
             this.btnZup.Text = "Z+";
             this.btnZup.UseVisualStyleBackColor = false;
             this.btnZup.Click += new System.EventHandler(this.btnZup_Click);
@@ -503,13 +505,15 @@ namespace _3dpBurner
             this.button1.Location = new System.Drawing.Point(145, 92);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(35, 20);
-            this.button1.TabIndex = 53;
+            this.button1.TabIndex = 11;
             this.button1.Text = "5";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.lblRemaining);
+            this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.lblBuf);
             this.groupBox2.Controls.Add(this.lblElapsed);
             this.groupBox2.Controls.Add(this.label8);
@@ -523,14 +527,14 @@ namespace _3dpBurner
             this.groupBox2.Location = new System.Drawing.Point(4, 86);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(251, 113);
-            this.groupBox2.TabIndex = 54;
+            this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "File";
             // 
             // lblBuf
             // 
             this.lblBuf.AutoSize = true;
-            this.lblBuf.Location = new System.Drawing.Point(221, 46);
+            this.lblBuf.Location = new System.Drawing.Point(221, 42);
             this.lblBuf.Name = "lblBuf";
             this.lblBuf.Size = new System.Drawing.Size(25, 13);
             this.lblBuf.TabIndex = 47;
@@ -539,7 +543,8 @@ namespace _3dpBurner
             // lblElapsed
             // 
             this.lblElapsed.AutoSize = true;
-            this.lblElapsed.Location = new System.Drawing.Point(197, 70);
+            this.lblElapsed.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.lblElapsed.Location = new System.Drawing.Point(199, 57);
             this.lblElapsed.Name = "lblElapsed";
             this.lblElapsed.Size = new System.Drawing.Size(49, 13);
             this.lblElapsed.TabIndex = 45;
@@ -548,7 +553,7 @@ namespace _3dpBurner
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(152, 70);
+            this.label8.Location = new System.Drawing.Point(155, 57);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(48, 13);
             this.label8.TabIndex = 46;
@@ -573,14 +578,16 @@ namespace _3dpBurner
             this.tbLaserPwr.Name = "tbLaserPwr";
             this.tbLaserPwr.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbLaserPwr.Size = new System.Drawing.Size(33, 23);
-            this.tbLaserPwr.TabIndex = 55;
+            this.tbLaserPwr.TabIndex = 4;
             this.tbLaserPwr.Text = "0";
             this.tbLaserPwr.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbLaserPwr.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbLaserPwr_KeyPress);
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "G-Code Files(*.CNC;*.NC;*.TAP;*.TXT)|*.CNC;*.NC;*.TAP;*.TXT|All files (*.*)|*.*";
+            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // tmrUpdates
             // 
@@ -597,7 +604,7 @@ namespace _3dpBurner
             this.gbConecction.Location = new System.Drawing.Point(3, 28);
             this.gbConecction.Name = "gbConecction";
             this.gbConecction.Size = new System.Drawing.Size(252, 50);
-            this.gbConecction.TabIndex = 58;
+            this.gbConecction.TabIndex = 1;
             this.gbConecction.TabStop = false;
             this.gbConecction.Text = "Connection";
             // 
@@ -608,7 +615,7 @@ namespace _3dpBurner
             this.bRefreshport.Location = new System.Drawing.Point(217, 17);
             this.bRefreshport.Name = "bRefreshport";
             this.bRefreshport.Size = new System.Drawing.Size(25, 23);
-            this.bRefreshport.TabIndex = 56;
+            this.bRefreshport.TabIndex = 4;
             this.bRefreshport.UseVisualStyleBackColor = true;
             this.bRefreshport.Click += new System.EventHandler(this.bRefreshport_Click);
             // 
@@ -621,7 +628,7 @@ namespace _3dpBurner
             this.gbLaserControl.Location = new System.Drawing.Point(453, 28);
             this.gbLaserControl.Name = "gbLaserControl";
             this.gbLaserControl.Size = new System.Drawing.Size(158, 96);
-            this.gbLaserControl.TabIndex = 59;
+            this.gbLaserControl.TabIndex = 4;
             this.gbLaserControl.TabStop = false;
             this.gbLaserControl.Text = "Laser";
             // 
@@ -631,7 +638,7 @@ namespace _3dpBurner
             this.btnLaserPwr.Location = new System.Drawing.Point(4, 63);
             this.btnLaserPwr.Name = "btnLaserPwr";
             this.btnLaserPwr.Size = new System.Drawing.Size(38, 27);
-            this.btnLaserPwr.TabIndex = 56;
+            this.btnLaserPwr.TabIndex = 3;
             this.btnLaserPwr.Text = "PWR";
             this.btnLaserPwr.UseVisualStyleBackColor = true;
             this.btnLaserPwr.Click += new System.EventHandler(this.btnLaserPwr_Click);
@@ -642,7 +649,7 @@ namespace _3dpBurner
             this.tbCommand.Location = new System.Drawing.Point(78, 135);
             this.tbCommand.Name = "tbCommand";
             this.tbCommand.Size = new System.Drawing.Size(254, 20);
-            this.tbCommand.TabIndex = 27;
+            this.tbCommand.TabIndex = 3;
             this.tbCommand.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbCommand_KeyPress);
             // 
             // gbConsole
@@ -654,7 +661,7 @@ namespace _3dpBurner
             this.gbConsole.Location = new System.Drawing.Point(3, 204);
             this.gbConsole.Name = "gbConsole";
             this.gbConsole.Size = new System.Drawing.Size(386, 163);
-            this.gbConsole.TabIndex = 60;
+            this.gbConsole.TabIndex = 6;
             this.gbConsole.TabStop = false;
             this.gbConsole.Text = "Console";
             // 
@@ -677,7 +684,7 @@ namespace _3dpBurner
             this.rtbLog.ReadOnly = true;
             this.rtbLog.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.rtbLog.Size = new System.Drawing.Size(369, 110);
-            this.rtbLog.TabIndex = 4;
+            this.rtbLog.TabIndex = 1;
             this.rtbLog.Text = "";
             this.rtbLog.WordWrap = false;
             // 
@@ -686,7 +693,7 @@ namespace _3dpBurner
             this.btlClearLog.Location = new System.Drawing.Point(6, 133);
             this.btlClearLog.Name = "btlClearLog";
             this.btlClearLog.Size = new System.Drawing.Size(66, 24);
-            this.btlClearLog.TabIndex = 29;
+            this.btlClearLog.TabIndex = 2;
             this.btlClearLog.Text = "ClearLog";
             this.btlClearLog.UseVisualStyleBackColor = true;
             this.btlClearLog.Click += new System.EventHandler(this.btlClearLog_Click);
@@ -701,7 +708,7 @@ namespace _3dpBurner
             this.gbReference.Location = new System.Drawing.Point(452, 130);
             this.gbReference.Name = "gbReference";
             this.gbReference.Size = new System.Drawing.Size(158, 69);
-            this.gbReference.TabIndex = 61;
+            this.gbReference.TabIndex = 5;
             this.gbReference.TabStop = false;
             this.gbReference.Text = "Reference";
             // 
@@ -711,7 +718,7 @@ namespace _3dpBurner
             this.btnZeroZ.Location = new System.Drawing.Point(53, 42);
             this.btnZeroZ.Name = "btnZeroZ";
             this.btnZeroZ.Size = new System.Drawing.Size(52, 20);
-            this.btnZeroZ.TabIndex = 33;
+            this.btnZeroZ.TabIndex = 4;
             this.btnZeroZ.Text = "ZeroZ";
             this.btnZeroZ.UseVisualStyleBackColor = true;
             this.btnZeroZ.Click += new System.EventHandler(this.btnZeroZ_Click);
@@ -722,7 +729,7 @@ namespace _3dpBurner
             this.btnZeroXY.Location = new System.Drawing.Point(53, 17);
             this.btnZeroXY.Name = "btnZeroXY";
             this.btnZeroXY.Size = new System.Drawing.Size(52, 25);
-            this.btnZeroXY.TabIndex = 32;
+            this.btnZeroXY.TabIndex = 3;
             this.btnZeroXY.Text = "ZeroXY";
             this.btnZeroXY.UseVisualStyleBackColor = true;
             this.btnZeroXY.Click += new System.EventHandler(this.btnZeroXY_Click);
@@ -733,7 +740,7 @@ namespace _3dpBurner
             this.btnZero.Location = new System.Drawing.Point(55, 17);
             this.btnZero.Name = "btnZero";
             this.btnZero.Size = new System.Drawing.Size(48, 45);
-            this.btnZero.TabIndex = 31;
+            this.btnZero.TabIndex = 5;
             this.btnZero.Text = "Zero";
             this.btnZero.UseVisualStyleBackColor = true;
             this.btnZero.Click += new System.EventHandler(this.btnZero_Click);
@@ -747,7 +754,7 @@ namespace _3dpBurner
             this.gbCustom.Location = new System.Drawing.Point(396, 204);
             this.gbCustom.Name = "gbCustom";
             this.gbCustom.Size = new System.Drawing.Size(215, 75);
-            this.gbCustom.TabIndex = 62;
+            this.gbCustom.TabIndex = 7;
             this.gbCustom.TabStop = false;
             this.gbCustom.Text = "Custom";
             // 
@@ -761,7 +768,7 @@ namespace _3dpBurner
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(615, 24);
-            this.menuStrip1.TabIndex = 63;
+            this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // modeToolStripMenuItem
@@ -845,7 +852,7 @@ namespace _3dpBurner
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel2,
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 363);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 366);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(615, 22);
             this.statusStrip1.SizingGrip = false;
@@ -864,12 +871,31 @@ namespace _3dpBurner
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(28, 17);
             this.toolStripStatusLabel1.Text = "       ";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(143, 72);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(60, 13);
+            this.label1.TabIndex = 48;
+            this.label1.Text = "Remaining:";
+            // 
+            // lblRemaining
+            // 
+            this.lblRemaining.AutoSize = true;
+            this.lblRemaining.ForeColor = System.Drawing.Color.Red;
+            this.lblRemaining.Location = new System.Drawing.Point(199, 72);
+            this.lblRemaining.Name = "lblRemaining";
+            this.lblRemaining.Size = new System.Drawing.Size(49, 13);
+            this.lblRemaining.TabIndex = 49;
+            this.lblRemaining.Text = "00:00:00";
+            // 
             // frm3dpBurner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(615, 385);
+            this.ClientSize = new System.Drawing.Size(615, 388);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.gbCustom);
             this.Controls.Add(this.gbReference);
@@ -880,8 +906,10 @@ namespace _3dpBurner
             this.Controls.Add(this.gbJog);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "frm3dpBurner";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "3dpBurner";
@@ -980,6 +1008,8 @@ namespace _3dpBurner
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.Label lblRemaining;
+        private System.Windows.Forms.Label label1;
     }
 }
 

@@ -1,4 +1,6 @@
-﻿/*  3dpBurner Sender. A GCODE sender for GRBL based devices.
+﻿/*Changelog 
+
+/*  3dpBurner Sender. A GCODE sender for GRBL based devices.
     This file is part of 3dpBurner Sender application.
    
     Copyright (C) 2014-2015  Adrian V. J. (villamany) contact: villamany@gmail.com
@@ -35,7 +37,7 @@ namespace _3dpBurner
 {
     public partial class frm3dpBurner : Form
     {
-        const string ver = "0.2";//app version
+        const string ver = "0.2.1";//app version
         string rxString;
         List<string> fileLines;
         Int32 fileLinesCount;//for file streaming control
@@ -45,6 +47,7 @@ namespace _3dpBurner
         int bufFree = grblBuferSize;//actual suposed free bytes on grbl buffer
 
         TimeSpan elapsed;//elapsed time from file burnin
+        TimeSpan remaining;//remaining time (estimated)
         DateTime timeInit;//time start to burning file
 
         bool transfer = false;//true whe transfer in progress
@@ -53,16 +56,18 @@ namespace _3dpBurner
         bool jogging=false;//true when we are jogging
 
         //Thread exception
-        private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        private void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
+            ClosePort();
             Exception ex = e.Exception;
             MessageBox.Show(ex.Message, "Thread exception");
         }
         //Unhandled exception
-        private static void Application_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void Application_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject != null)
             {
+                ClosePort();
                 Exception ex = (Exception)e.ExceptionObject;
                 MessageBox.Show(ex.Message, "Application exception");
             }
@@ -220,8 +225,16 @@ namespace _3dpBurner
         //Send a line adding a CR and log it
         private void sendLine(string data)
         {
-            serialPort1.Write(data + "\r");
-            rtbLog.AppendText(data + " >");//if not in transfer log the txLine
+            try
+            {
+                serialPort1.Write(data + "\r");
+                rtbLog.AppendText(data + " >");//if not in transfer log the txLine
+            }
+            catch(Exception err)
+            {
+                logError("Sending line", err);
+                updateControls();
+            }
         }
         //Open port
         private bool OpenPort()
@@ -239,6 +252,7 @@ namespace _3dpBurner
             catch (Exception err)
             {
                 logError("Opening port", err);
+                updateControls();
                 return (false);
             }
         }
@@ -256,6 +270,7 @@ namespace _3dpBurner
             catch (Exception err)
             {
                 logError("Closing port", err);
+                updateControls();
                 return (false);
             }
         }
@@ -536,10 +551,12 @@ namespace _3dpBurner
         //Update time elapsed
         private void tmrUpdates_Tick(object sender, EventArgs e)
         {
-            if (transfer)//if active transfer update elapsed time
+            if (transfer)//if active transfer update elapsed/remaining time time
             {
                 elapsed = DateTime.UtcNow - timeInit;
                 lblElapsed.Text = elapsed.ToString(@"hh\:mm\:ss");
+                remaining = TimeSpan.FromSeconds((fileLinesCount - fileLinesConfirmed) * Convert.ToInt32(elapsed.TotalSeconds) / fileLinesConfirmed);
+                lblRemaining.Text = remaining.ToString(@"hh\:mm\:ss");
             }
             //retrieve GRBL status       
             if (serialPort1.IsOpen)
@@ -552,8 +569,7 @@ namespace _3dpBurner
                 catch (Exception er)
                 {
                     logError("Retrieving GRBL status", er);
-                    //serialPort1.Close();
-                    //  updateControls();
+                    serialPort1.Close();
                 }
             }          
         }
@@ -715,6 +731,19 @@ namespace _3dpBurner
         {
             frmAbout frmAb = new frmAbout();
             frmAb.ShowDialog();
+        }
+        //Enter on power texbox-Send Sxx command
+        private void tbLaserPwr_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            {
+                if (e.KeyChar != (char)13) return;
+                sendLine("S"+tbLaserPwr.Text);
+            }
+        }
+
+        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
         }  
     }
 }
