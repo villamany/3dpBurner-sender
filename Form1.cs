@@ -32,12 +32,18 @@ using System.Windows.Forms;
 using System.IO.Ports;
 using System.IO;
 //using System.Threading;
+using System.Management;//for serial port device names
+
+using System.Runtime.InteropServices;
+// for DllImportAttribute //For prevent entering standby/switching the display device off.
+
 
 namespace _3dpBurner
 {
+
     public partial class frm3dpBurner : Form
     {
-        const string ver = "0.2.1";//app version
+        const string ver = "1.0beta";//app version
         string rxString;
         List<string> fileLines;
         Int32 fileLinesCount;//for file streaming control
@@ -54,6 +60,11 @@ namespace _3dpBurner
         bool dataProcessing;//false when no data processing pending
 
         bool jogging=false;//true when we are jogging
+        
+        int GRBL_errCount = 0;// aux for grbl errors count for auto close port when more than some continuous errors ocurrs (prevents pplication hangs)
+        const int GRBL_errMax = 2;//Number of grbl response errors for auto close ports
+
+        bool connected;//for log the connected message
 
         //Thread exception
         private void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
@@ -72,6 +83,19 @@ namespace _3dpBurner
                 MessageBox.Show(ex.Message, "Application exception");
             }
         }
+        //For prevent entering standby/switching the display device off.
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
+        [FlagsAttribute]
+        public enum EXECUTION_STATE : uint
+        {
+            ES_AWAYMODE_REQUIRED = 0x00000040,
+            ES_CONTINUOUS = 0x80000000,
+            ES_DISPLAY_REQUIRED = 0x00000002,
+            ES_SYSTEM_REQUIRED = 0x00000001
+            // Legacy flag, should not be used.
+            // ES_USER_PRESENT = 0x00000004
+        }
         //Constructor
         public frm3dpBurner()
         {
@@ -84,7 +108,7 @@ namespace _3dpBurner
         public void logErrorThr(object sender, EventArgs e)
         {
             logError(mens,err);
-            updateControls();
+            //updateControls();
         }
         //log a error message
         private void logError(string message, Exception err)
@@ -95,43 +119,64 @@ namespace _3dpBurner
             rtbLog.AppendText(textmsg);
             rtbLog.ScrollToCaret();
         }
-        //update visual controls status (Enable/Disable controls)
-        private void updateControls()
+        private void setTransferTrue()
         {
-            if (serialPort1.IsOpen) bOpenPort.Text = "Close"; else bOpenPort.Text = "Open";
-            bStart.Enabled = serialPort1.IsOpen && !transfer;
-            bOpenPort.Enabled = !transfer;
-            cbPort.Enabled = !serialPort1.IsOpen;
-            cbBaud.Enabled = !serialPort1.IsOpen;
-            bRefreshport.Enabled = !serialPort1.IsOpen;
+            transfer = true;
+            //prevent system idle
+            SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS | EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_AWAYMODE_REQUIRED | EXECUTION_STATE.ES_DISPLAY_REQUIRED);
 
-            tbFile.Enabled = !transfer;
-            bOpenfile.Enabled = !transfer;
+        }
+        private void setTransferFalse()
+        {
+            transfer = false;
+            //restore system idle state
+            SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS);
+        }
+        //update visual controls status (Enable/Disable controls)
+        private void ZupdateControls()
+        {
+            //if (serialPort1.IsOpen)
+            //{
+            //    bOpenPort.ForeColor = Color.Gray;
+            //    bClosePort.ForeColor = SystemColors.ControlText;
+            //}
+           // else
+           // {
+            //    bOpenPort.ForeColor = SystemColors.ControlText;
+           //     bClosePort.ForeColor = Color.Gray;
+           // }
 
-            gbJog.Enabled = serialPort1.IsOpen && !transfer;
-            gbLaserControl.Enabled = serialPort1.IsOpen && !transfer;
-            gbCustom.Enabled = serialPort1.IsOpen && !transfer;
-            gbReference.Enabled = serialPort1.IsOpen && !transfer;
 
-            btnReset.Enabled = serialPort1.IsOpen;
-            if (btnReset.Enabled) btnReset.BackColor = Color.Red; else btnReset.BackColor = Color.WhiteSmoke;
+            //bStart.Enabled = serialPort1.IsOpen && !transfer;
+            //bOpenPort.Enabled = !transfer;
+            //cbPort.Enabled = !serialPort1.IsOpen;
+            //bRefreshport.Enabled = !serialPort1.IsOpen;
 
-            tbCommand.Enabled = serialPort1.IsOpen && !transfer;
-            bSendCmd.Enabled = tbCommand.Enabled;     
+            //tbFile.Enabled = !transfer;
+            //bOpenfile.Enabled = !transfer;
+
+            //gbJog.Enabled = serialPort1.IsOpen && !transfer;
+            //gbLaserControl.Enabled = serialPort1.IsOpen && !transfer;
+            //gbCustom.Enabled = serialPort1.IsOpen && !transfer;
+            //gbReference.Enabled = serialPort1.IsOpen && !transfer;
+
+            //btnReset.Enabled = serialPort1.IsOpen;
+            //if (btnReset.Enabled) btnReset.BackColor = Color.Red; else btnReset.BackColor = Color.WhiteSmoke;
+
+           // tbCommand.Enabled = serialPort1.IsOpen && !transfer;
+           // bSendCmd.Enabled = tbCommand.Enabled;     
             
-            restoreSettingsToolStripMenuItem.Enabled=!serialPort1.IsOpen;
+            //restoreSettingsToolStripMenuItem.Enabled=!serialPort1.IsOpen;
         }
         //Update file progress (progressBars and labels)
         private void updateProgress()
         {
             pbFile.Value = fileLinesConfirmed;
-            pbBufer.Value = grblBuferSize - bufFree;
-            lblBuf.Text = Convert.ToString(pbBufer.Value);//
             //file progress status
-            if ((!File.Exists(tbFile.Text)) || (fileLinesCount < 1) )//|| (fileLinesSent < 1))
-                lblFileProgress.Text = "0% (0/0 lines)";//"0%   ( 0/0 lines )";
+            if ((!File.Exists(tbFile.Text)) || (fileLinesCount < 1))//|| (fileLinesSent < 1))
+                lblFileProgress.Text = "0%";// (0/0 lines)";//"0%   ( 0/0 lines )";
             else
-                lblFileProgress.Text = Convert.ToString(fileLinesConfirmed * 100 / fileLinesCount) + "% (" + Convert.ToString(fileLinesConfirmed) + "/" + Convert.ToString(fileLinesCount) + " lines)";
+                lblFileProgress.Text = Convert.ToString(fileLinesConfirmed * 100 / fileLinesCount) + "%";// "% (" + Convert.ToString(fileLinesConfirmed) + "/" + Convert.ToString(fileLinesCount) + " lines)";
         }
         //Process the received data line
         private void dataRx(object sender, EventArgs e)
@@ -140,6 +185,27 @@ namespace _3dpBurner
             if ((rxString.Length > 0) && (rxString[0] == '<'))
             {
                 toolStripStatusLabel1.Text =rxString;
+                if (!connected)
+                {
+                    rtbLog.AppendText("\r\n[CONNECTED]\r\n");
+                    rtbLog.ScrollToCaret();
+                    rtbLog.Refresh();
+                    connected=true;
+                }
+
+
+                if (rxString.Contains("Run")) statusStrip1.BackColor = Color.DodgerBlue;
+                else
+                    if (rxString.Contains("Idle")) statusStrip1.BackColor = Color.YellowGreen;
+                    else
+                        if (rxString.Contains("Alarm")) statusStrip1.BackColor = Color.DarkOrange;
+                        else
+                            if (rxString.Contains("Home")) statusStrip1.BackColor = Color.Violet;
+                            else
+                               if (rxString.Contains("Queue")) statusStrip1.BackColor = Color.FromArgb(255,255,10);
+                                else
+                                toolStripStatusLabel1.BackColor = SystemColors.Control;
+
                 dataProcessing = false;
                 return;
             }
@@ -171,12 +237,12 @@ namespace _3dpBurner
             fileLinesConfirmed++;//line processed
             if (fileLinesConfirmed >= fileLinesCount)//Transfer finished and processed? Update status and controls
             {
-                transfer = false;
+                setTransferFalse();
                 updateProgress();
-                rtbLog.AppendText("[File done @" + lblElapsed.Text + "]\r\n");
+                rtbLog.AppendText("[Yeah!. Burning Done! @" + lblElapsed.Text + "]\r\n");
                 rtbLog.ScrollToCaret();
-                MessageBox.Show("Yeah!. Burning Done!\r\n\r\nWorking time: " + lblElapsed.Text, "Done", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                updateControls();
+               // MessageBox.Show("Yeah!. Burning Done!\r\n\r\nWorking time: " + lblElapsed.Text, "Done", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                //updateControls();
              }
              else//not finished
              {
@@ -188,11 +254,46 @@ namespace _3dpBurner
         //Send next line from fileStreaming
         private void sendNextLine()
         {
-            while ((fileLinesSent < fileLinesCount) && (bufFree >= fileLines[fileLinesSent].Length + 1))
+            try
             {
-                serialPort1.Write(fileLines[fileLinesSent] + "\r");
-                bufFree -= (fileLines[fileLinesSent].Length + 1);
-                fileLinesSent++;
+                while ((fileLinesSent < fileLinesCount) && (bufFree >= fileLines[fileLinesSent].Length + 1))
+                {
+                    //Override power
+                    if (cbOverridePower.Checked)
+                    {
+                        int n=0;
+                        int actualPWR,overridedPWR;
+                        string ActualPWRstr = "";
+                        string OverridedPWRstr;
+                        char ch;
+                        while (n<fileLines[fileLinesSent].Length-2)
+                        {
+                            if (fileLines[fileLinesSent][n]=='S')
+                            {
+                                n++;
+                                ch= fileLines[fileLinesSent][n];
+                                while ((n<fileLines[fileLinesSent].Length-1)&&(ch=='0')||(ch=='1')||(ch=='2')||(ch=='3')||(ch=='4')||(ch=='5')||(ch=='6')||(ch=='7')||(ch=='8')||(ch=='9'))
+                                {
+                                    ActualPWRstr += ch;
+                                }
+                                actualPWR = Convert.ToInt16(ActualPWRstr);
+                                overridedPWR = actualPWR +(actualPWR * tbOverridePower.Value/ 100);
+                                if (overridedPWR < 0) overridedPWR = 0;
+                                if (overridedPWR >255) overridedPWR = 255;
+                                lblOverridePowerValue.Text = Convert.ToString(overridedPWR);
+                                                  
+                            }
+                        }
+                    }
+                    serialPort1.Write(fileLines[fileLinesSent] + "\r");
+                    bufFree -= (fileLines[fileLinesSent].Length + 1);
+                    fileLinesSent++;
+                }
+            }
+            catch (Exception er)
+            {
+                logError("Error sending next line", er);
+                ClosePort();
             }
         }
         //Rx from serial port
@@ -214,8 +315,9 @@ namespace _3dpBurner
                 {
                     //serialPort1.DiscardInBuffer();
                     //serialPort1.DiscardOutBuffer();
-                    serialPort1.Close();
+                    //serialPort1.Close();
                     mens = "Error reading line from serial port";
+                    ClosePort();
                     err = errort;
                     this.Invoke(new EventHandler(logErrorThr));
                     //return;
@@ -233,7 +335,7 @@ namespace _3dpBurner
             catch(Exception err)
             {
                 logError("Sending line", err);
-                updateControls();
+                //updateControls();
             }
         }
         //Open port
@@ -241,66 +343,108 @@ namespace _3dpBurner
         {
             try
             {
+                connected = false;
+                toolStripStatusLabel1.Text = "";
+                toolStripStatusLabel1.BackColor=SystemColors.Control;
+                rtbLog.AppendText("\r\n[CONNECTING]\r\n");
+                rtbLog.ScrollToCaret();
+                rtbLog.Refresh();
+
                 serialPort1.PortName = cbPort.Text;
-                serialPort1.BaudRate = Convert.ToInt32(cbBaud.Text);
+
                 serialPort1.Open();
+                serialPort1.DiscardInBuffer();
+                serialPort1.DiscardOutBuffer();
+                
                 dataProcessing = true;
-                grblReset();
-                updateControls();
+                //grblReset();
+                //updateControls();
+                GRBL_errCount = 0;
                 return (true);
             }
             catch (Exception err)
             {
                 logError("Opening port", err);
-                updateControls();
+                ClosePort();
+                //updateControls();
                 return (false);
             }
         }
         private bool ClosePort()
         {
-            try
+            if (transfer) { button5_Click(this, null); return (false); }
+            else
             {
-                if (serialPort1.IsOpen)
+                try
                 {
-                    serialPort1.Close();                  
+                    setTransferFalse();
+                    if (serialPort1.IsOpen)
+                    {
+                        serialPort1.DiscardInBuffer();
+                        serialPort1.DiscardOutBuffer();
+                        serialPort1.Close();
+                        rtbLog.AppendText("\r\n[DISCONNECTED]\r\n");
+                        rtbLog.ScrollToCaret();
+                        toolStripStatusLabel1.BackColor = SystemColors.Control;
+
+                    }
+                    //updateControls();
+                    toolStripStatusLabel1.Text = "";
+                    toolStripStatusLabel1.BackColor = SystemColors.Control;
+                    return (true);
                 }
-                updateControls();
-                return (true);
-            }
-            catch (Exception err)
-            {
-                logError("Closing port", err);
-                updateControls();
-                return (false);
+                catch (Exception err)
+                {
+                    logError("Closing port", err);
+                    //updateControls();
+                    return (false);
+                }
             }
         }
         //Send reset sentence
         private void grblReset()//Stop/reset button
         {
-            transfer = false;
-            rtbLog.AppendText("[CTRL-X]");
-            var dataArray = new byte[] { 24 };//Ctrl-X
-            serialPort1.Write(dataArray, 0, 1);         
+            try
+            {
+                setTransferFalse();
+                rtbLog.AppendText("[RESET]");
+                var dataArray = new byte[] { 24 };//Ctrl-X
+                serialPort1.Write(dataArray, 0, 1);
+            }
+            catch (Exception err)
+            {
+                logError("Reset command fail", err);
+            }
+
         }
         //Open port button
         private void button1_Click(object sender, EventArgs e)
-        {
-            if (serialPort1.IsOpen) 
-                ClosePort();
-            else
-            OpenPort();                  
+        { 
+                     
+            if (serialPort1.IsOpen) ClosePort(); else OpenPort();                  
         }
-        //Refresh port names
+        //Refresh port names on the combo box
         private void refreshPorts()
         {
-            List<String> tList = new List<String>();
-            cbPort.Items.Clear();
-            foreach (string s in SerialPort.GetPortNames()) tList.Add(s);
-            if (tList.Count < 1) logError("No serial ports found", null);
-            else
+            try
             {
-                tList.Sort();
-                cbPort.Items.AddRange(tList.ToArray());
+
+
+                List<String> tList = new List<String>();
+                cbPort.Items.Clear();
+                foreach (string s in SerialPort.GetPortNames()) tList.Add(s);
+                if (tList.Count < 1) logError("No serial ports found", null);
+                else
+                {
+                    tList.Sort();
+                    cbPort.Items.AddRange(tList.ToArray());
+                }
+                
+                
+            }
+            catch (Exception e)
+            {
+                logError("Refreshing available ports", e);
             }
         }
         //Form on load
@@ -310,9 +454,8 @@ namespace _3dpBurner
             bHome.Text = "Go\r\nHome";
             btnZero.Text = "Zero\r\nXY";
             btnUnlock.Text = "Unlock\r\nAlarm";
-            refreshPorts();
-            pbBufer.Maximum = grblBuferSize;
-            updateControls();
+            //refreshPorts();
+            //updateControls();
             loadSettings();
             prepareFile();
         }
@@ -321,34 +464,12 @@ namespace _3dpBurner
         {
             try
             {   
-                string mode;
                 cbPort.Text = Properties.Settings1.Default.port;
-                cbBaud.Text = Properties.Settings1.Default.baud;
                 tbFile.Text = Properties.Settings1.Default.file;
                 tbStepSize.Text = Properties.Settings1.Default.step;
                 tbLaserPwr.Text = Properties.Settings1.Default.pwr;
                 tbCustom1.Text = Properties.Settings1.Default.custom1;
                 tbCustom2.Text = Properties.Settings1.Default.custom2;
-                mode = Properties.Settings1.Default.mode;
-                if (mode==axisMillToolStripMenuItem.Text)
-                {
-                    selectMode(axisMillToolStripMenuItem);
-                }
-                else
-                    if (mode==axisLaserPWRSToolStripMenuItem.Text)
-                    {
-                        selectMode(axisLaserPWRSToolStripMenuItem);
-                    }
-                    else
-                        if (mode == axisLaserPWRZToolStripMenuItem.Text)
-                        {
-                            selectMode(axisLaserPWRZToolStripMenuItem);
-                        }
-                        else
-                            if (mode == axisLaserToolStripMenuItem.Text)
-                            {
-                                selectMode(axisLaserToolStripMenuItem);
-                            }
             }
             catch (Exception e)
             {
@@ -360,20 +481,12 @@ namespace _3dpBurner
         {
             try
             {
-                string mode="";//get selected mode
-                if(axisMillToolStripMenuItem.Checked) mode=axisMillToolStripMenuItem.Text;//3 axis mill
-                else if (axisLaserPWRSToolStripMenuItem.Checked) mode = axisLaserPWRSToolStripMenuItem.Text;//2 axis laser power with S
-                else if (axisLaserPWRZToolStripMenuItem.Checked) mode = axisLaserPWRZToolStripMenuItem.Text;//2 axis laser power with Z
-                else if (axisLaserToolStripMenuItem.Checked) mode = axisLaserToolStripMenuItem.Text;//3 axis laser
-
                 Properties.Settings1.Default.port = cbPort.Text;
-                Properties.Settings1.Default.baud = cbBaud.Text;
                 Properties.Settings1.Default.file = tbFile.Text;
                 Properties.Settings1.Default.step = tbStepSize.Text;
                 Properties.Settings1.Default.pwr = tbLaserPwr.Text;
                 Properties.Settings1.Default.custom1 = tbCustom1.Text;
                 Properties.Settings1.Default.custom2 = tbCustom2.Text;
-                Properties.Settings1.Default.mode = mode;
                 Properties.Settings1.Default.Save();
                 
             }
@@ -454,18 +567,12 @@ namespace _3dpBurner
         {
             tbStepSize.Text = "100";
         }
-        //Refresh button
-        public void bRefreshport_Click(object sender, EventArgs e)
-        {
-
-            refreshPorts();
-        }
         //Fornm on close
         private void frm3dpBurner_FormClosing(object sender, FormClosingEventArgs e)
         {
             saveSettings();
             if (transfer)
-            {
+           {
                 button5_Click(this, null);           
                 e.Cancel=true;
             }
@@ -520,28 +627,30 @@ namespace _3dpBurner
             updateProgress();
         }
         //Send file button
-        private void bStar_Click(object sender, EventArgs e)
-        {             
-                if (!File.Exists(tbFile.Text))
+        private void bStart_Click(object sender, EventArgs e)
+        {
+
                 {
-                    logError("Error opening file",null);
-                    return;
+                    rtbLog.AppendText("[RESUME]\r\n");
+                    rtbLog.ScrollToCaret();
+
+                    try
+                    {
+                        serialPort1.Write("~");
+                    }
+                    catch (Exception err)
+                    {
+                        logError("Sending command", err);
+                    }
+
                 }
-                prepareFile();
-                transfer = true;
-                fileLinesConfirmed = 0;
-                timeInit = DateTime.UtcNow;
-                rtbLog.AppendText("[Sending file...]\r\n");
-                rtbLog.ScrollToCaret();
-                sendNextLine();
-                updateControls();
+                
+                //updateControls();
         }
         //Reset button
         private void button5_Click(object sender, EventArgs e)
         {
-            grblReset();
-            transfer = false;
-            updateControls();          
+                grblReset();
         }
         //Unlock alarm button
         private void button11_Click(object sender, EventArgs e)
@@ -555,6 +664,7 @@ namespace _3dpBurner
             {
                 elapsed = DateTime.UtcNow - timeInit;
                 lblElapsed.Text = elapsed.ToString(@"hh\:mm\:ss");
+                if (fileLinesConfirmed>0)
                 remaining = TimeSpan.FromSeconds((fileLinesCount - fileLinesConfirmed) * Convert.ToInt32(elapsed.TotalSeconds) / fileLinesConfirmed);
                 lblRemaining.Text = remaining.ToString(@"hh\:mm\:ss");
             }
@@ -565,13 +675,21 @@ namespace _3dpBurner
                 {
                     var dataArray = new byte[] { Convert.ToByte('?') };
                     serialPort1.Write(dataArray, 0, 1);
+                    GRBL_errCount=0;
                 }
                 catch (Exception er)
-                {
-                    logError("Retrieving GRBL status", er);
-                    serialPort1.Close();
+                {   
+                    GRBL_errCount ++;
+                    logError("Retrieving 3dpBurner status ( TRY " + GRBL_errCount.ToString() + " / " + GRBL_errMax.ToString() + " )", er);
+
+                    if (GRBL_errCount >= GRBL_errMax)
+                    {
+                        logError("3dpBurner seem to not respond", null);
+                        ClosePort();
+                    }
                 }
-            }          
+            }
+
         }
         //Laser On button
         private void btnLaserOn_Click(object sender, EventArgs e)
@@ -618,95 +736,9 @@ namespace _3dpBurner
         //Laser PWR button
         private void btnLaserPwr_Click(object sender, EventArgs e)
         {
-            //Mode 2axisLaserPwrZ
-            if (axisLaserPWRZToolStripMenuItem.Checked) sendLine("Z" + tbLaserPwr.Text);//Variable spindle PWM managed by 'Z'
-            //Mode 2axisLaserPwrS or 3axisLaser or 3axisMill
-            else
-                sendLine("S" + tbLaserPwr.Text);//Variable spindle PWM managed by 'Z'
+            sendLine("S" + tbLaserPwr.Text);//Variable spindle PWM managed by 'Z'
         }
-        //Select mode (enable/disable and mod user controls for the specified mode)
-        private void selectMode(ToolStripMenuItem mode)
-        {
-            axisMillToolStripMenuItem.Checked=false;
-            axisLaserPWRSToolStripMenuItem.Checked=false;
-            axisLaserPWRZToolStripMenuItem.Checked=false;
-            axisLaserToolStripMenuItem.Checked = false;
-            mode.Checked = true;
-                //3axis mode? (mode 3axisMill or 3axisLaser). Show 3axis controls
-                if(mode==axisMillToolStripMenuItem|mode==axisLaserToolStripMenuItem)
-                {
-                    btnZdown.Visible = true;
-                    btnZup.Visible = true;
-                    btnZero.Visible=false;
-                    btnZeroXY.Visible = true;
-                    btnZeroZ.Visible = true;
-                    bXup.Location = new Point(51, 66);
-                    bXdown.Location = new Point(5, 66);
-                    bYup.Location = new Point(29, 21);
-                    bYdown.Location = new Point(29, 111);
-                    tbStepSize.Location = new Point(98, 125);
-                }
-                //2axis mode (mode 2axisLaserPwrS or 2axisLaserPwrZ).Show 2axis controls
-                else
-                {
-                    btnZdown.Visible = false;
-                    btnZup.Visible = false;
-                    btnZero.Visible=true;
-                    btnZeroXY.Visible = false;
-                    btnZeroZ.Visible = false;
-                    bXup.Location = new Point(96, 66);
-                    bXdown.Location = new Point(4, 66);
-                    bYup.Location = new Point(50, 21);
-                    bYdown.Location = new Point(50, 111);
-                    tbStepSize.Location = new Point(52, 76);
-                }
-                //Laser mode? (Mode 2axisLaserPwrS or 2axisLaserPwrZ or 3axisLaser). Rename laser controls
-                if (mode==axisLaserPWRSToolStripMenuItem | mode==axisLaserPWRZToolStripMenuItem | mode==axisLaserToolStripMenuItem)
-                    {
-                        gbLaserControl.Text = "Laser";
-                        btnLaserPwr.Text = "PWR";
-                    }
-                //Mill mode? (3axisMill). Rename mill controls
-                else
-                    {
-                        btnZdown.Visible = true;
-                        btnZup.Visible = true;
-                        gbLaserControl.Text = "Spindle";
-                        btnLaserPwr.Text = "RPM";
-                    }
-        }
-        //Mode 3axisMill Selection. Standard 3 axis mill mode
-        private void axisMillToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            selectMode(axisMillToolStripMenuItem);
-        }
-        //Mode 2axisLaserPwrS Selection. 2 axis laser using "Sx" as power set command
-        private void axisLaserPWRSToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            selectMode(axisLaserPWRSToolStripMenuItem);
-        }
-        //Mode 2axisLaserPwrZ Selection. 2 axis laser using "Zx" as power set command
-        private void axisLaserPWRZToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            selectMode(axisLaserPWRZToolStripMenuItem);
-        }
-        //Mode 3axisLaser Selection. 3 axis laser (use "Sx" as power set command)
-        private void axisLaserToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            selectMode(axisLaserToolStripMenuItem);
-        }
-        //Jog Z+ button
-        private void btnZup_Click(object sender, EventArgs e)
-        {
-            jogging = true;
-            sendLine("G91G0Z+" + tbStepSize.Text);    
-        }
-        //Jog Z- button
-        private void btnZdown_Click(object sender, EventArgs e)
-        {
-            jogging = true;
-            sendLine("G91G0Z-" + tbStepSize.Text); 
-        }
+ 
         //Zero XY button
         private void btnZeroXY_Click(object sender, EventArgs e)
         {
@@ -741,9 +773,180 @@ namespace _3dpBurner
             }
         }
 
-        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        private void cbPort_DropDown(object sender, EventArgs e)
+        {
+            refreshPorts();
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
-        }  
+        }
+
+        private void bPause_Click(object sender, EventArgs e)
+        {
+            rtbLog.AppendText("[PAUSE]\r\n");
+            rtbLog.ScrollToCaret();
+            rtbLog.Refresh();
+            try
+            {
+
+                serialPort1.Write("!");//ensure pause is received
+            }
+            catch (Exception err)
+            {
+                logError("Sending command", err);
+            }
+
+            //sendLine("!");
+        }
+        //Reset button
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            grblReset();
+        }
+
+
+        //Update OverridePower porcent label
+        private void tbOverridePower_Scroll(object sender, EventArgs e)
+        {
+            lblOverridePowerPorcent.Text = Convert.ToString(tbOverridePower.Value) + '%';
+        }
+        //Reset override power button
+        private void bResetOverridePWR_Click(object sender, EventArgs e)
+        {
+            tbOverridePower.Value = 100;
+            tbOverridePower_Scroll(this, null);
+        }
+
+        private void panel4_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btnFileStart_Click(object sender, EventArgs e)
+        {
+            if (!transfer)
+            {
+                if (!File.Exists(tbFile.Text))
+                {
+                    logError("Error opening file", null);
+                    return;
+                }
+                rtbLog.AppendText("[Sending file...]\r\n");
+                rtbLog.ScrollToCaret();
+                rtbLog.Refresh();
+                prepareFile();
+                setTransferTrue();
+                fileLinesConfirmed = 0;
+                timeInit = DateTime.UtcNow;
+
+                sendNextLine();
+
+            }
+            else
+            {
+                setTransferFalse();
+                pbFile.Value = 0;
+                rtbLog.AppendText("[Stop]\r\n");
+                rtbLog.ScrollToCaret();
+            }
+        }
+        //Visual controls updates
+        private void tmrControlsUpdate_Tick(object sender, EventArgs e)
+        {
+             if (serialPort1.IsOpen)
+            {
+                bOpenPort.Text = "Disconnect";
+                bOpenPort.BackColor = Color.Salmon;
+            }
+            else
+            {
+                bOpenPort.Text = "Connect";
+                bOpenPort.BackColor = Color.YellowGreen;
+            }
+
+            if (transfer)
+            {
+                btnFileStart.Text="Abort File";
+                btnFileStart.BackColor = Color.Salmon;
+            }
+            else
+            {
+                btnFileStart.Text = "Send File";
+                btnFileStart.BackColor = Color.YellowGreen;
+            }
+            if (toolStripStatusLabel1.Text== "") statusStrip1.BackColor = SystemColors.Control;
+        }
+
+        private void rtbLog_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void gbCustom_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void frm3dpBurner_MouseMove(object sender, MouseEventArgs e)
+        {
+           
+        }
+        
+        private void tmrKeepAlive_Tick(object sender, EventArgs e)
+
+        {
+            //SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS | EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_AWAYMODE_REQUIRED | EXECUTION_STATE.ES_DISPLAY_REQUIRED);
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            
+
+        }
+
+        private void cbPort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnPortsInfo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //Display port and device names on the console
+                rtbLog.AppendText("\r\n[PORTS INFO]\r\n");
+                rtbLog.ScrollToCaret();  
+                ManagementObjectSearcher searcher =
+            new ManagementObjectSearcher("root\\CIMV2",
+            "SELECT * FROM Win32_PnPEntity");
+
+                foreach (ManagementObject queryObj in searcher.Get())
+                {
+                    if ((queryObj["Caption"] != null) && (queryObj["Name"].ToString().Contains("(COM")))
+                    {
+
+                        rtbLog.AppendText((queryObj["Caption"]).ToString()+"\r\n");
+                        rtbLog.ScrollToCaret();
+                    }
+
+                }
+                rtbLog.AppendText("\r\n");
+                //--------------------------------------------
+            }
+            catch (Exception er)
+            {
+                logError("Geting available ports info", er);
+            }
+        }
+
+
     }
 }
