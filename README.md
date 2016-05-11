@@ -25,6 +25,14 @@ Check the "Releases" for release versions and .exe files.
 //-------------------- Changelog ------------------------
 //-------------------------------------------------------
 //-------------------------------------------------------
+v1.0beta
+//-------------------------------------------------------
+-The application has been centered for simplicity and 3dpBurner best performance instead compatibility with general GRBL based devices (there are other better alternatives for these). Mode menu and port speed selection has been removed.
+-Corrected stability issues.
+-Added "hold" and "Resume" buttons.
+-When sending files the screen and system will prevent to entering in idle mode returning to default mode when no transfer in progress (prevent hangs and micropauses issues when streaming).
+-New look and other minor functions added.
+//-------------------------------------------------------
 v0.2.1
 //-------------------------------------------------------
 -Minors bugs and stability issues fix
