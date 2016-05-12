@@ -25,6 +25,12 @@ Check the "Releases" for release versions and .exe files.
 //-------------------- Changelog ------------------------
 //-------------------------------------------------------
 //-------------------------------------------------------
+v1.0beta2
+//-------------------------------------------------------
+//-A more precise remaining time
+//-Code cleanup
+//-Other minor bugs and improvements
+//-------------------------------------------------------
 v1.0beta
 //-------------------------------------------------------
 -The application has been centered for simplicity and 3dpBurner best performance instead compatibility with general GRBL based devices (there are other better alternatives for these). Mode menu and port speed selection has been removed.

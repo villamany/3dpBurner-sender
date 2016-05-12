@@ -37,13 +37,18 @@ using System.Management;//for serial port device names
 using System.Runtime.InteropServices;
 // for DllImportAttribute //For prevent entering standby/switching the display device off.
 
+//Latest chanes
+
+//-A more precise remaining time
+//-Code cleanup
+//-Other minor bugs and improvements
 
 namespace _3dpBurner
 {
 
     public partial class frm3dpBurner : Form
     {
-        const string ver = "1.0beta";//app version
+        const string ver = "1.0beta2";//app version
         string rxString;
         List<string> fileLines;
         Int32 fileLinesCount;//for file streaming control
@@ -108,7 +113,6 @@ namespace _3dpBurner
         public void logErrorThr(object sender, EventArgs e)
         {
             logError(mens,err);
-            //updateControls();
         }
         //log a error message
         private void logError(string message, Exception err)
@@ -124,59 +128,12 @@ namespace _3dpBurner
             transfer = true;
             //prevent system idle
             SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS | EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_AWAYMODE_REQUIRED | EXECUTION_STATE.ES_DISPLAY_REQUIRED);
-
         }
         private void setTransferFalse()
         {
             transfer = false;
             //restore system idle state
             SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS);
-        }
-        //update visual controls status (Enable/Disable controls)
-        private void ZupdateControls()
-        {
-            //if (serialPort1.IsOpen)
-            //{
-            //    bOpenPort.ForeColor = Color.Gray;
-            //    bClosePort.ForeColor = SystemColors.ControlText;
-            //}
-           // else
-           // {
-            //    bOpenPort.ForeColor = SystemColors.ControlText;
-           //     bClosePort.ForeColor = Color.Gray;
-           // }
-
-
-            //bStart.Enabled = serialPort1.IsOpen && !transfer;
-            //bOpenPort.Enabled = !transfer;
-            //cbPort.Enabled = !serialPort1.IsOpen;
-            //bRefreshport.Enabled = !serialPort1.IsOpen;
-
-            //tbFile.Enabled = !transfer;
-            //bOpenfile.Enabled = !transfer;
-
-            //gbJog.Enabled = serialPort1.IsOpen && !transfer;
-            //gbLaserControl.Enabled = serialPort1.IsOpen && !transfer;
-            //gbCustom.Enabled = serialPort1.IsOpen && !transfer;
-            //gbReference.Enabled = serialPort1.IsOpen && !transfer;
-
-            //btnReset.Enabled = serialPort1.IsOpen;
-            //if (btnReset.Enabled) btnReset.BackColor = Color.Red; else btnReset.BackColor = Color.WhiteSmoke;
-
-           // tbCommand.Enabled = serialPort1.IsOpen && !transfer;
-           // bSendCmd.Enabled = tbCommand.Enabled;     
-            
-            //restoreSettingsToolStripMenuItem.Enabled=!serialPort1.IsOpen;
-        }
-        //Update file progress (progressBars and labels)
-        private void updateProgress()
-        {
-            pbFile.Value = fileLinesConfirmed;
-            //file progress status
-            if ((!File.Exists(tbFile.Text)) || (fileLinesCount < 1))//|| (fileLinesSent < 1))
-                lblFileProgress.Text = "0%";// (0/0 lines)";//"0%   ( 0/0 lines )";
-            else
-                lblFileProgress.Text = Convert.ToString(fileLinesConfirmed * 100 / fileLinesCount) + "%";// "% (" + Convert.ToString(fileLinesConfirmed) + "/" + Convert.ToString(fileLinesCount) + " lines)";
         }
         //Process the received data line
         private void dataRx(object sender, EventArgs e)
@@ -192,7 +149,6 @@ namespace _3dpBurner
                     rtbLog.Refresh();
                     connected=true;
                 }
-
 
                 if (rxString.Contains("Run")) statusStrip1.BackColor = Color.DodgerBlue;
                 else
@@ -238,17 +194,18 @@ namespace _3dpBurner
             if (fileLinesConfirmed >= fileLinesCount)//Transfer finished and processed? Update status and controls
             {
                 setTransferFalse();
-                updateProgress();
+                pbFile.Value = 100;
+                lblFileProgress.Text = "100%";
+                lblRemaining.Text = "00:00:00";
+               // updateProgress();
                 rtbLog.AppendText("[Yeah!. Burning Done! @" + lblElapsed.Text + "]\r\n");
                 rtbLog.ScrollToCaret();
-               // MessageBox.Show("Yeah!. Burning Done!\r\n\r\nWorking time: " + lblElapsed.Text, "Done", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                //updateControls();
              }
              else//not finished
              {
                 if (fileLinesSent < fileLinesCount) sendNextLine();//If more lines on file, send it
              }
-             updateProgress();
+             //updateProgress();
              dataProcessing = false;
         }
         //Send next line from fileStreaming
@@ -258,33 +215,6 @@ namespace _3dpBurner
             {
                 while ((fileLinesSent < fileLinesCount) && (bufFree >= fileLines[fileLinesSent].Length + 1))
                 {
-                    //Override power
-                    if (cbOverridePower.Checked)
-                    {
-                        int n=0;
-                        int actualPWR,overridedPWR;
-                        string ActualPWRstr = "";
-                        string OverridedPWRstr;
-                        char ch;
-                        while (n<fileLines[fileLinesSent].Length-2)
-                        {
-                            if (fileLines[fileLinesSent][n]=='S')
-                            {
-                                n++;
-                                ch= fileLines[fileLinesSent][n];
-                                while ((n<fileLines[fileLinesSent].Length-1)&&(ch=='0')||(ch=='1')||(ch=='2')||(ch=='3')||(ch=='4')||(ch=='5')||(ch=='6')||(ch=='7')||(ch=='8')||(ch=='9'))
-                                {
-                                    ActualPWRstr += ch;
-                                }
-                                actualPWR = Convert.ToInt16(ActualPWRstr);
-                                overridedPWR = actualPWR +(actualPWR * tbOverridePower.Value/ 100);
-                                if (overridedPWR < 0) overridedPWR = 0;
-                                if (overridedPWR >255) overridedPWR = 255;
-                                lblOverridePowerValue.Text = Convert.ToString(overridedPWR);
-                                                  
-                            }
-                        }
-                    }
                     serialPort1.Write(fileLines[fileLinesSent] + "\r");
                     bufFree -= (fileLines[fileLinesSent].Length + 1);
                     fileLinesSent++;
@@ -313,14 +243,10 @@ namespace _3dpBurner
                 }
                 catch (Exception errort)
                 {
-                    //serialPort1.DiscardInBuffer();
-                    //serialPort1.DiscardOutBuffer();
-                    //serialPort1.Close();
                     mens = "Error reading line from serial port";
                     ClosePort();
                     err = errort;
                     this.Invoke(new EventHandler(logErrorThr));
-                    //return;
                 }
              }
         }
@@ -335,7 +261,6 @@ namespace _3dpBurner
             catch(Exception err)
             {
                 logError("Sending line", err);
-                //updateControls();
             }
         }
         //Open port
@@ -357,8 +282,6 @@ namespace _3dpBurner
                 serialPort1.DiscardOutBuffer();
                 
                 dataProcessing = true;
-                //grblReset();
-                //updateControls();
                 GRBL_errCount = 0;
                 return (true);
             }
@@ -366,13 +289,12 @@ namespace _3dpBurner
             {
                 logError("Opening port", err);
                 ClosePort();
-                //updateControls();
                 return (false);
             }
         }
         private bool ClosePort()
         {
-            if (transfer) { button5_Click(this, null); return (false); }
+            if (transfer) { button5_Click(this, null); return (false);}
             else
             {
                 try
@@ -388,7 +310,6 @@ namespace _3dpBurner
                         toolStripStatusLabel1.BackColor = SystemColors.Control;
 
                     }
-                    //updateControls();
                     toolStripStatusLabel1.Text = "";
                     toolStripStatusLabel1.BackColor = SystemColors.Control;
                     return (true);
@@ -396,7 +317,6 @@ namespace _3dpBurner
                 catch (Exception err)
                 {
                     logError("Closing port", err);
-                    //updateControls();
                     return (false);
                 }
             }
@@ -419,8 +339,7 @@ namespace _3dpBurner
         }
         //Open port button
         private void button1_Click(object sender, EventArgs e)
-        { 
-                     
+        {                    
             if (serialPort1.IsOpen) ClosePort(); else OpenPort();                  
         }
         //Refresh port names on the combo box
@@ -428,8 +347,6 @@ namespace _3dpBurner
         {
             try
             {
-
-
                 List<String> tList = new List<String>();
                 cbPort.Items.Clear();
                 foreach (string s in SerialPort.GetPortNames()) tList.Add(s);
@@ -438,9 +355,7 @@ namespace _3dpBurner
                 {
                     tList.Sort();
                     cbPort.Items.AddRange(tList.ToArray());
-                }
-                
-                
+                }                             
             }
             catch (Exception e)
             {
@@ -454,10 +369,7 @@ namespace _3dpBurner
             bHome.Text = "Go\r\nHome";
             btnZero.Text = "Zero\r\nXY";
             btnUnlock.Text = "Unlock\r\nAlarm";
-            //refreshPorts();
-            //updateControls();
             loadSettings();
-            prepareFile();
         }
         //Load settings
         private void loadSettings()
@@ -588,12 +500,14 @@ namespace _3dpBurner
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 tbFile.Text = openFileDialog1.FileName;
-                prepareFile();
             }
         }
         //Prepare file
         private void prepareFile()
         {
+            rtbLog.AppendText("[Optimizing file...]\r\n");
+            rtbLog.ScrollToCaret();
+            rtbLog.Refresh();
             fileLinesSent = 0;
             fileLinesCount = 0;
             fileLinesConfirmed = 0;
@@ -606,7 +520,6 @@ namespace _3dpBurner
                 line = file.ReadLine();
                 while (line!= null)
                 {
-                    //line.Trim();
                     line=line.Replace(" ", "");//remove spaces
                     line = line.Replace("\r", " ");//remove CR
                     line = line.Replace("\n", " ");//remove LF
@@ -620,11 +533,9 @@ namespace _3dpBurner
                     line = file.ReadLine();
                 }
                 file.Close();
-                pbFile.Maximum = fileLinesCount;//progressBar maximun update
                 elapsed = TimeSpan.Zero;
                 lblElapsed.Text = elapsed.ToString(@"hh\:mm\:ss");
             }
-            updateProgress();
         }
         //Send file button
         private void bStart_Click(object sender, EventArgs e)
@@ -644,8 +555,6 @@ namespace _3dpBurner
                     }
 
                 }
-                
-                //updateControls();
         }
         //Reset button
         private void button5_Click(object sender, EventArgs e)
@@ -662,11 +571,27 @@ namespace _3dpBurner
         {
             if (transfer)//if active transfer update elapsed/remaining time time
             {
+                float progressPorc;
+
+                //file progress status
+                if ((!File.Exists(tbFile.Text)) || (fileLinesCount < 1))//|| (fileLinesSent < 1))
+                    progressPorc = 0;
+                else
+                {
+                    progressPorc = (float)(fileLinesConfirmed * 100.0 / fileLinesCount);
+                    //Text = Convert.ToString(fileLinesConfirmed) + "/" + Convert.ToString(fileLinesCount) + " lines "+ Convert.ToString (fileLinesConfirmed * 100.0 / fileLinesCount)+"%";//debug
+                }
+                pbFile.Value = Convert.ToInt32(progressPorc);
+                lblFileProgress.Text = Convert.ToString((Int32)progressPorc) + "%";// "% (" + Convert.ToString(fileLinesConfirmed) + "/" + Convert.ToString(fileLinesCount) + " lines)";
+
+
+
                 elapsed = DateTime.UtcNow - timeInit;
                 lblElapsed.Text = elapsed.ToString(@"hh\:mm\:ss");
                 if (fileLinesConfirmed>0)
-                remaining = TimeSpan.FromSeconds((fileLinesCount - fileLinesConfirmed) * Convert.ToInt32(elapsed.TotalSeconds) / fileLinesConfirmed);
+                remaining = TimeSpan.FromSeconds((100 - progressPorc) * (elapsed.TotalSeconds / progressPorc));
                 lblRemaining.Text = remaining.ToString(@"hh\:mm\:ss");
+
             }
             //retrieve GRBL status       
             if (serialPort1.IsOpen)
@@ -689,7 +614,6 @@ namespace _3dpBurner
                     }
                 }
             }
-
         }
         //Laser On button
         private void btnLaserOn_Click(object sender, EventArgs e)
@@ -756,7 +680,6 @@ namespace _3dpBurner
             Properties.Settings1.Default.Reset();
             Properties.Settings1.Default.Save();
             loadSettings();
-
         }
         //About dialog
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -772,17 +695,12 @@ namespace _3dpBurner
                 sendLine("S"+tbLaserPwr.Text);
             }
         }
-
+        //Serial port selection
         private void cbPort_DropDown(object sender, EventArgs e)
         {
             refreshPorts();
         }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
+        //Pause button
         private void bPause_Click(object sender, EventArgs e)
         {
             rtbLog.AppendText("[PAUSE]\r\n");
@@ -790,15 +708,12 @@ namespace _3dpBurner
             rtbLog.Refresh();
             try
             {
-
                 serialPort1.Write("!");//ensure pause is received
             }
             catch (Exception err)
             {
                 logError("Sending command", err);
             }
-
-            //sendLine("!");
         }
         //Reset button
         private void btnReset_Click(object sender, EventArgs e)
@@ -806,24 +721,7 @@ namespace _3dpBurner
             grblReset();
         }
 
-
-        //Update OverridePower porcent label
-        private void tbOverridePower_Scroll(object sender, EventArgs e)
-        {
-            lblOverridePowerPorcent.Text = Convert.ToString(tbOverridePower.Value) + '%';
-        }
-        //Reset override power button
-        private void bResetOverridePWR_Click(object sender, EventArgs e)
-        {
-            tbOverridePower.Value = 100;
-            tbOverridePower_Scroll(this, null);
-        }
-
-        private void panel4_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
+        //Send file button
         private void btnFileStart_Click(object sender, EventArgs e)
         {
             if (!transfer)
@@ -832,17 +730,19 @@ namespace _3dpBurner
                 {
                     logError("Error opening file", null);
                     return;
-                }
+                }               
+                btnFileStart.Text = "Abort File";
+                btnFileStart.BackColor = Color.Salmon;
+                bOpenfile.Enabled = false;
+                Refresh();
+                prepareFile();
                 rtbLog.AppendText("[Sending file...]\r\n");
                 rtbLog.ScrollToCaret();
                 rtbLog.Refresh();
-                prepareFile();
                 setTransferTrue();
                 fileLinesConfirmed = 0;
                 timeInit = DateTime.UtcNow;
-
                 sendNextLine();
-
             }
             else
             {
@@ -870,53 +770,17 @@ namespace _3dpBurner
             {
                 btnFileStart.Text="Abort File";
                 btnFileStart.BackColor = Color.Salmon;
+                bOpenfile.Enabled = false;
             }
             else
             {
                 btnFileStart.Text = "Send File";
                 btnFileStart.BackColor = Color.YellowGreen;
+                bOpenfile.Enabled = true;
             }
             if (toolStripStatusLabel1.Text== "") statusStrip1.BackColor = SystemColors.Control;
         }
-
-        private void rtbLog_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void gbCustom_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void frm3dpBurner_MouseMove(object sender, MouseEventArgs e)
-        {
-           
-        }
-        
-        private void tmrKeepAlive_Tick(object sender, EventArgs e)
-
-        {
-            //SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS | EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_AWAYMODE_REQUIRED | EXECUTION_STATE.ES_DISPLAY_REQUIRED);
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            
-
-        }
-
-        private void cbPort_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
+        //Serial ports info button
         private void btnPortsInfo_Click(object sender, EventArgs e)
         {
             try
@@ -936,17 +800,14 @@ namespace _3dpBurner
                         rtbLog.AppendText((queryObj["Caption"]).ToString()+"\r\n");
                         rtbLog.ScrollToCaret();
                     }
-
                 }
                 rtbLog.AppendText("\r\n");
-                //--------------------------------------------
             }
             catch (Exception er)
             {
                 logError("Geting available ports info", er);
             }
         }
-
 
     }
 }
