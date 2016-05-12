@@ -84,6 +84,17 @@ namespace _3dpBurner
             this.lblElapsed = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.lblFileProgress = new System.Windows.Forms.Label();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.trackBar2 = new System.Windows.Forms.TrackBar();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.bResetOverridePWR = new System.Windows.Forms.Button();
+            this.cbOverridePower = new System.Windows.Forms.CheckBox();
+            this.lblOverridePowerValue = new System.Windows.Forms.Label();
+            this.lblOverridePowerPorcent = new System.Windows.Forms.Label();
+            this.tbOverridePower = new System.Windows.Forms.TrackBar();
             this.tbLaserPwr = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tmrUpdates = new System.Windows.Forms.Timer(this.components);
@@ -116,6 +127,10 @@ namespace _3dpBurner
             this.panel19 = new System.Windows.Forms.Panel();
             this.gbJog.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
+            this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbOverridePower)).BeginInit();
             this.gbConecction.SuspendLayout();
             this.gbLaserControl.SuspendLayout();
             this.gbConsole.SuspendLayout();
@@ -155,6 +170,7 @@ namespace _3dpBurner
             this.cbPort.TabIndex = 1;
             this.cbPort.Text = "COM1";
             this.cbPort.DropDown += new System.EventHandler(this.cbPort_DropDown);
+            this.cbPort.SelectedIndexChanged += new System.EventHandler(this.cbPort_SelectedIndexChanged);
             // 
             // serialPort1
             // 
@@ -286,7 +302,7 @@ namespace _3dpBurner
             this.tbStepSize.BackColor = System.Drawing.Color.Snow;
             this.tbStepSize.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbStepSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbStepSize.Location = new System.Drawing.Point(62, 87);
+            this.tbStepSize.Location = new System.Drawing.Point(60, 87);
             this.tbStepSize.MaxLength = 3;
             this.tbStepSize.Name = "tbStepSize";
             this.tbStepSize.Size = new System.Drawing.Size(40, 22);
@@ -303,6 +319,7 @@ namespace _3dpBurner
             this.pbFile.Step = 1;
             this.pbFile.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.pbFile.TabIndex = 40;
+            this.pbFile.Value = 50;
             // 
             // btnCustom2
             // 
@@ -350,7 +367,7 @@ namespace _3dpBurner
             this.button12.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.button12.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
             this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button12.Location = new System.Drawing.Point(165, 17);
+            this.button12.Location = new System.Drawing.Point(160, 17);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(39, 25);
             this.button12.TabIndex = 6;
@@ -364,7 +381,7 @@ namespace _3dpBurner
             this.button19.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.button19.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
             this.button19.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button19.Location = new System.Drawing.Point(165, 45);
+            this.button19.Location = new System.Drawing.Point(160, 45);
             this.button19.Name = "button19";
             this.button19.Size = new System.Drawing.Size(39, 25);
             this.button19.TabIndex = 7;
@@ -378,7 +395,7 @@ namespace _3dpBurner
             this.button20.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.button20.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
             this.button20.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button20.Location = new System.Drawing.Point(165, 73);
+            this.button20.Location = new System.Drawing.Point(160, 73);
             this.button20.Name = "button20";
             this.button20.Size = new System.Drawing.Size(39, 25);
             this.button20.TabIndex = 8;
@@ -392,7 +409,7 @@ namespace _3dpBurner
             this.button21.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.button21.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
             this.button21.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button21.Location = new System.Drawing.Point(165, 129);
+            this.button21.Location = new System.Drawing.Point(160, 129);
             this.button21.Name = "button21";
             this.button21.Size = new System.Drawing.Size(39, 25);
             this.button21.TabIndex = 10;
@@ -406,7 +423,7 @@ namespace _3dpBurner
             this.button22.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.button22.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
             this.button22.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button22.Location = new System.Drawing.Point(165, 157);
+            this.button22.Location = new System.Drawing.Point(160, 157);
             this.button22.Name = "button22";
             this.button22.Size = new System.Drawing.Size(39, 25);
             this.button22.TabIndex = 11;
@@ -430,9 +447,9 @@ namespace _3dpBurner
             this.gbJog.Controls.Add(this.button12);
             this.gbJog.Controls.Add(this.tbStepSize);
             this.gbJog.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbJog.Location = new System.Drawing.Point(264, 28);
+            this.gbJog.Location = new System.Drawing.Point(268, 28);
             this.gbJog.Name = "gbJog";
-            this.gbJog.Size = new System.Drawing.Size(213, 195);
+            this.gbJog.Size = new System.Drawing.Size(206, 195);
             this.gbJog.TabIndex = 3;
             this.gbJog.TabStop = false;
             this.gbJog.Text = "Motion";
@@ -445,7 +462,7 @@ namespace _3dpBurner
             this.bYdown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bYdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bYdown.ForeColor = System.Drawing.Color.White;
-            this.bYdown.Location = new System.Drawing.Point(57, 131);
+            this.bYdown.Location = new System.Drawing.Point(55, 131);
             this.bYdown.Name = "bYdown";
             this.bYdown.Size = new System.Drawing.Size(51, 51);
             this.bYdown.TabIndex = 4;
@@ -461,7 +478,7 @@ namespace _3dpBurner
             this.bXup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bXup.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bXup.ForeColor = System.Drawing.Color.White;
-            this.bXup.Location = new System.Drawing.Point(108, 74);
+            this.bXup.Location = new System.Drawing.Point(106, 74);
             this.bXup.Name = "bXup";
             this.bXup.Size = new System.Drawing.Size(51, 51);
             this.bXup.TabIndex = 3;
@@ -477,7 +494,7 @@ namespace _3dpBurner
             this.bXdown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bXdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bXdown.ForeColor = System.Drawing.Color.White;
-            this.bXdown.Location = new System.Drawing.Point(7, 74);
+            this.bXdown.Location = new System.Drawing.Point(4, 74);
             this.bXdown.Name = "bXdown";
             this.bXdown.Size = new System.Drawing.Size(51, 51);
             this.bXdown.TabIndex = 2;
@@ -493,7 +510,7 @@ namespace _3dpBurner
             this.bYup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bYup.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bYup.ForeColor = System.Drawing.Color.White;
-            this.bYup.Location = new System.Drawing.Point(57, 18);
+            this.bYup.Location = new System.Drawing.Point(55, 18);
             this.bYup.Name = "bYup";
             this.bYup.Size = new System.Drawing.Size(51, 51);
             this.bYup.TabIndex = 1;
@@ -507,7 +524,7 @@ namespace _3dpBurner
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.button1.FlatAppearance.BorderColor = System.Drawing.Color.DimGray;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(165, 101);
+            this.button1.Location = new System.Drawing.Point(160, 101);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(39, 25);
             this.button1.TabIndex = 9;
@@ -602,6 +619,135 @@ namespace _3dpBurner
             this.lblFileProgress.Size = new System.Drawing.Size(48, 17);
             this.lblFileProgress.TabIndex = 44;
             this.lblFileProgress.Text = "100%";
+            // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(242)))), ((int)(((byte)(255)))));
+            this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel7.Controls.Add(this.checkBox2);
+            this.panel7.Controls.Add(this.label2);
+            this.panel7.Controls.Add(this.label4);
+            this.panel7.Controls.Add(this.trackBar2);
+            this.panel7.Location = new System.Drawing.Point(307, 34);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(226, 60);
+            this.panel7.TabIndex = 69;
+            this.panel7.Visible = false;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox2.Location = new System.Drawing.Point(8, 5);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(116, 17);
+            this.checkBox2.TabIndex = 62;
+            this.checkBox2.Text = "Override Motion";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.Red;
+            this.label2.Location = new System.Drawing.Point(178, 32);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 17);
+            this.label2.TabIndex = 61;
+            this.label2.Text = "255";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(174, 7);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(48, 17);
+            this.label4.TabIndex = 59;
+            this.label4.Text = "100%";
+            // 
+            // trackBar2
+            // 
+            this.trackBar2.Location = new System.Drawing.Point(3, 23);
+            this.trackBar2.Maximum = 200;
+            this.trackBar2.Minimum = -200;
+            this.trackBar2.Name = "trackBar2";
+            this.trackBar2.Size = new System.Drawing.Size(167, 45);
+            this.trackBar2.TabIndex = 57;
+            this.trackBar2.TickFrequency = 20;
+            this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+            // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(232)))), ((int)(((byte)(178)))));
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel6.Controls.Add(this.bResetOverridePWR);
+            this.panel6.Controls.Add(this.cbOverridePower);
+            this.panel6.Controls.Add(this.lblOverridePowerValue);
+            this.panel6.Controls.Add(this.lblOverridePowerPorcent);
+            this.panel6.Controls.Add(this.tbOverridePower);
+            this.panel6.Location = new System.Drawing.Point(57, 17);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(226, 60);
+            this.panel6.TabIndex = 68;
+            this.panel6.Visible = false;
+            // 
+            // bResetOverridePWR
+            // 
+            this.bResetOverridePWR.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(232)))), ((int)(((byte)(255)))));
+            this.bResetOverridePWR.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bResetOverridePWR.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bResetOverridePWR.Location = new System.Drawing.Point(127, 3);
+            this.bResetOverridePWR.Name = "bResetOverridePWR";
+            this.bResetOverridePWR.Size = new System.Drawing.Size(42, 17);
+            this.bResetOverridePWR.TabIndex = 63;
+            this.bResetOverridePWR.Text = "RESET";
+            this.bResetOverridePWR.UseVisualStyleBackColor = false;
+            this.bResetOverridePWR.Click += new System.EventHandler(this.bResetOverridePWR_Click);
+            // 
+            // cbOverridePower
+            // 
+            this.cbOverridePower.AutoSize = true;
+            this.cbOverridePower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbOverridePower.Location = new System.Drawing.Point(8, 5);
+            this.cbOverridePower.Name = "cbOverridePower";
+            this.cbOverridePower.Size = new System.Drawing.Size(113, 17);
+            this.cbOverridePower.TabIndex = 62;
+            this.cbOverridePower.Text = "Override Power";
+            this.cbOverridePower.UseVisualStyleBackColor = true;
+            // 
+            // lblOverridePowerValue
+            // 
+            this.lblOverridePowerValue.AutoSize = true;
+            this.lblOverridePowerValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOverridePowerValue.ForeColor = System.Drawing.Color.Red;
+            this.lblOverridePowerValue.Location = new System.Drawing.Point(178, 32);
+            this.lblOverridePowerValue.Name = "lblOverridePowerValue";
+            this.lblOverridePowerValue.Size = new System.Drawing.Size(35, 17);
+            this.lblOverridePowerValue.TabIndex = 61;
+            this.lblOverridePowerValue.Text = "255";
+            // 
+            // lblOverridePowerPorcent
+            // 
+            this.lblOverridePowerPorcent.AutoSize = true;
+            this.lblOverridePowerPorcent.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOverridePowerPorcent.Location = new System.Drawing.Point(174, 7);
+            this.lblOverridePowerPorcent.Name = "lblOverridePowerPorcent";
+            this.lblOverridePowerPorcent.Size = new System.Drawing.Size(48, 17);
+            this.lblOverridePowerPorcent.TabIndex = 59;
+            this.lblOverridePowerPorcent.Text = "100%";
+            // 
+            // tbOverridePower
+            // 
+            this.tbOverridePower.Location = new System.Drawing.Point(3, 23);
+            this.tbOverridePower.Maximum = 200;
+            this.tbOverridePower.Name = "tbOverridePower";
+            this.tbOverridePower.Size = new System.Drawing.Size(167, 45);
+            this.tbOverridePower.TabIndex = 57;
+            this.tbOverridePower.TickFrequency = 20;
+            this.tbOverridePower.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+            this.tbOverridePower.Value = 100;
+            this.tbOverridePower.Scroll += new System.EventHandler(this.tbOverridePower_Scroll);
             // 
             // tbLaserPwr
             // 
@@ -714,6 +860,8 @@ namespace _3dpBurner
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.Controls.Add(this.panel7);
+            this.panel1.Controls.Add(this.panel6);
             this.panel1.Controls.Add(this.rtbLog);
             this.panel1.Location = new System.Drawing.Point(7, 16);
             this.panel1.Name = "panel1";
@@ -734,6 +882,7 @@ namespace _3dpBurner
             this.rtbLog.TabIndex = 1;
             this.rtbLog.Text = "";
             this.rtbLog.WordWrap = false;
+            this.rtbLog.TextChanged += new System.EventHandler(this.rtbLog_TextChanged);
             // 
             // btlClearLog
             // 
@@ -791,6 +940,7 @@ namespace _3dpBurner
             this.gbCustom.TabIndex = 6;
             this.gbCustom.TabStop = false;
             this.gbCustom.Text = "Custom";
+            this.gbCustom.Enter += new System.EventHandler(this.gbCustom_Enter);
             // 
             // menuStrip1
             // 
@@ -804,6 +954,7 @@ namespace _3dpBurner
             this.menuStrip1.Size = new System.Drawing.Size(684, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // settingsToolStripMenuItem
             // 
@@ -964,10 +1115,17 @@ namespace _3dpBurner
             this.Text = "3dpBurner";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm3dpBurner_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frm3dpBurner_MouseMove);
             this.gbJog.ResumeLayout(false);
             this.gbJog.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbOverridePower)).EndInit();
             this.gbConecction.ResumeLayout(false);
             this.gbLaserControl.ResumeLayout(false);
             this.gbLaserControl.PerformLayout();
@@ -1044,8 +1202,19 @@ namespace _3dpBurner
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.Button bXdown;
         private System.Windows.Forms.Button bYup;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TrackBar trackBar2;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.CheckBox cbOverridePower;
+        private System.Windows.Forms.Label lblOverridePowerValue;
+        private System.Windows.Forms.Label lblOverridePowerPorcent;
+        private System.Windows.Forms.TrackBar tbOverridePower;
         private System.Windows.Forms.Button bXup;
         private System.Windows.Forms.Button bYdown;
+        private System.Windows.Forms.Button bResetOverridePWR;
         private System.Windows.Forms.Button btnFileStart;
         private System.Windows.Forms.Timer tmrControlsUpdate;
         private System.Windows.Forms.Button btnPortsInfo;
