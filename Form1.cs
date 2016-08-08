@@ -1,6 +1,4 @@
-﻿/*Changelog 
-
-/*  3dpBurner Sender. A GCODE sender for GRBL based devices.
+﻿/*  3dpBurner Sender. A GCODE sender for GRBL based devices.
     This file is part of 3dpBurner Sender application.
    
     Copyright (C) 2014-2015  Adrian V. J. (villamany) contact: villamany@gmail.com
@@ -37,7 +35,7 @@ using System.Management;//for serial port device names
 using System.Runtime.InteropServices;
 // for DllImportAttribute //For prevent entering standby/switching the display device off.
 
-//Latest chanes
+//Latest changes
 
 //-A more precise remaining time
 //-Code cleanup
@@ -48,7 +46,7 @@ namespace _3dpBurner
 
     public partial class frm3dpBurner : Form
     {
-        const string ver = "1.0beta2";//app version
+        const string ver = "1.1";//app version
         string rxString;
         List<string> fileLines;
         Int32 fileLinesCount;//for file streaming control

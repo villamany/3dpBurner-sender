@@ -27,6 +27,10 @@ Check the "Releases" for release versions and .exe files.
 //-------------------------------------------------------
 v1.0beta2
 //-------------------------------------------------------
+//-Minor cosmetic changes since latest beta.
+//-------------------------------------------------------
+v1.0beta2
+//-------------------------------------------------------
 //-A more precise remaining time
 //-Code cleanup
 //-Other minor bugs and improvements

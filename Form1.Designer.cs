@@ -171,6 +171,7 @@ namespace _3dpBurner
             this.btnLaserOn.FlatAppearance.BorderSize = 3;
             this.btnLaserOn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLaserOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLaserOn.ForeColor = System.Drawing.Color.White;
             this.btnLaserOn.Location = new System.Drawing.Point(6, 16);
             this.btnLaserOn.Name = "btnLaserOn";
             this.btnLaserOn.Size = new System.Drawing.Size(88, 49);
@@ -187,6 +188,7 @@ namespace _3dpBurner
             this.btsLaserOff.FlatAppearance.BorderSize = 3;
             this.btsLaserOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btsLaserOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btsLaserOff.ForeColor = System.Drawing.Color.White;
             this.btsLaserOff.Location = new System.Drawing.Point(101, 16);
             this.btsLaserOff.Name = "btsLaserOff";
             this.btsLaserOff.Size = new System.Drawing.Size(86, 85);
@@ -678,6 +680,7 @@ namespace _3dpBurner
             this.btnLaserPwr.FlatAppearance.BorderSize = 3;
             this.btnLaserPwr.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLaserPwr.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLaserPwr.ForeColor = System.Drawing.Color.White;
             this.btnLaserPwr.Location = new System.Drawing.Point(6, 72);
             this.btnLaserPwr.Name = "btnLaserPwr";
             this.btnLaserPwr.Size = new System.Drawing.Size(46, 30);
@@ -918,7 +921,7 @@ namespace _3dpBurner
             this.btnReset.FlatAppearance.BorderSize = 5;
             this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReset.ForeColor = System.Drawing.Color.White;
+            this.btnReset.ForeColor = System.Drawing.Color.Black;
             this.btnReset.Location = new System.Drawing.Point(5, 5);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(430, 71);
