@@ -56,7 +56,6 @@ namespace _3dpBurner
             this.btnLaserOn = new System.Windows.Forms.Button();
             this.btsLaserOff = new System.Windows.Forms.Button();
             this.btnCustom1 = new System.Windows.Forms.Button();
-            this.btnUnlock = new System.Windows.Forms.Button();
             this.tbFile = new System.Windows.Forms.TextBox();
             this.bOpenfile = new System.Windows.Forms.Button();
             this.bSendCmd = new System.Windows.Forms.Button();
@@ -97,11 +96,15 @@ namespace _3dpBurner
             this.rtbLog = new System.Windows.Forms.RichTextBox();
             this.btlClearLog = new System.Windows.Forms.Button();
             this.gbReference = new System.Windows.Forms.GroupBox();
+            this.btnGotoXoYo = new System.Windows.Forms.Button();
             this.btnZero = new System.Windows.Forms.Button();
             this.gbCustom = new System.Windows.Forms.GroupBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.view3dpBurnerSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sendConfigurationFileTo3dpBurnerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.restoreSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -114,6 +117,7 @@ namespace _3dpBurner
             this.panel5 = new System.Windows.Forms.Panel();
             this.btnReset = new System.Windows.Forms.Button();
             this.panel19 = new System.Windows.Forms.Panel();
+            this.btnUnlock = new System.Windows.Forms.Button();
             this.gbJog.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbConecction.SuspendLayout();
@@ -213,21 +217,6 @@ namespace _3dpBurner
             this.btnCustom1.UseVisualStyleBackColor = false;
             this.btnCustom1.Click += new System.EventHandler(this.btnCustom1_Click);
             // 
-            // btnUnlock
-            // 
-            this.btnUnlock.BackColor = System.Drawing.Color.DarkOrange;
-            this.btnUnlock.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            this.btnUnlock.FlatAppearance.BorderSize = 3;
-            this.btnUnlock.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUnlock.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUnlock.Location = new System.Drawing.Point(131, 17);
-            this.btnUnlock.Name = "btnUnlock";
-            this.btnUnlock.Size = new System.Drawing.Size(57, 51);
-            this.btnUnlock.TabIndex = 3;
-            this.btnUnlock.Text = "Unlock";
-            this.btnUnlock.UseVisualStyleBackColor = false;
-            this.btnUnlock.Click += new System.EventHandler(this.button11_Click);
-            // 
             // tbFile
             // 
             this.tbFile.BackColor = System.Drawing.Color.Snow;
@@ -275,11 +264,11 @@ namespace _3dpBurner
             this.bHome.FlatAppearance.BorderSize = 3;
             this.bHome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bHome.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bHome.Location = new System.Drawing.Point(5, 17);
+            this.bHome.Location = new System.Drawing.Point(130, 20);
             this.bHome.Name = "bHome";
-            this.bHome.Size = new System.Drawing.Size(57, 51);
-            this.bHome.TabIndex = 1;
-            this.bHome.Text = "GoHome";
+            this.bHome.Size = new System.Drawing.Size(58, 47);
+            this.bHome.TabIndex = 3;
+            this.bHome.Text = "Homing";
             this.bHome.UseVisualStyleBackColor = false;
             this.bHome.Click += new System.EventHandler(this.bHome_Click);
             // 
@@ -755,9 +744,9 @@ namespace _3dpBurner
             // 
             // gbReference
             // 
+            this.gbReference.Controls.Add(this.btnGotoXoYo);
             this.gbReference.Controls.Add(this.btnZero);
             this.gbReference.Controls.Add(this.bHome);
-            this.gbReference.Controls.Add(this.btnUnlock);
             this.gbReference.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbReference.Location = new System.Drawing.Point(485, 145);
             this.gbReference.Name = "gbReference";
@@ -766,6 +755,22 @@ namespace _3dpBurner
             this.gbReference.TabStop = false;
             this.gbReference.Text = "Reference";
             // 
+            // btnGotoXoYo
+            // 
+            this.btnGotoXoYo.BackColor = System.Drawing.Color.DarkOrange;
+            this.btnGotoXoYo.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btnGotoXoYo.FlatAppearance.BorderSize = 3;
+            this.btnGotoXoYo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGotoXoYo.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGotoXoYo.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnGotoXoYo.Location = new System.Drawing.Point(6, 17);
+            this.btnGotoXoYo.Name = "btnGotoXoYo";
+            this.btnGotoXoYo.Size = new System.Drawing.Size(59, 52);
+            this.btnGotoXoYo.TabIndex = 1;
+            this.btnGotoXoYo.Text = "GoTo 0,0";
+            this.btnGotoXoYo.UseVisualStyleBackColor = false;
+            this.btnGotoXoYo.Click += new System.EventHandler(this.btnGotoXoYo_Click);
+            // 
             // btnZero
             // 
             this.btnZero.BackColor = System.Drawing.Color.DarkOrange;
@@ -773,9 +778,9 @@ namespace _3dpBurner
             this.btnZero.FlatAppearance.BorderSize = 3;
             this.btnZero.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnZero.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnZero.Location = new System.Drawing.Point(68, 17);
+            this.btnZero.Location = new System.Drawing.Point(69, 20);
             this.btnZero.Name = "btnZero";
-            this.btnZero.Size = new System.Drawing.Size(57, 51);
+            this.btnZero.Size = new System.Drawing.Size(58, 47);
             this.btnZero.TabIndex = 2;
             this.btnZero.Text = "Zero";
             this.btnZero.UseVisualStyleBackColor = false;
@@ -812,6 +817,9 @@ namespace _3dpBurner
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
+            this.view3dpBurnerSettingsToolStripMenuItem,
+            this.sendConfigurationFileTo3dpBurnerToolStripMenuItem,
+            this.toolStripMenuItem2,
             this.restoreSettingsToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
@@ -820,13 +828,32 @@ namespace _3dpBurner
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(164, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(284, 6);
+            // 
+            // view3dpBurnerSettingsToolStripMenuItem
+            // 
+            this.view3dpBurnerSettingsToolStripMenuItem.Name = "view3dpBurnerSettingsToolStripMenuItem";
+            this.view3dpBurnerSettingsToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+            this.view3dpBurnerSettingsToolStripMenuItem.Text = "View 3dpBurner configuration";
+            this.view3dpBurnerSettingsToolStripMenuItem.Click += new System.EventHandler(this.view3dpBurnerSettingsToolStripMenuItem_Click);
+            // 
+            // sendConfigurationFileTo3dpBurnerToolStripMenuItem
+            // 
+            this.sendConfigurationFileTo3dpBurnerToolStripMenuItem.Name = "sendConfigurationFileTo3dpBurnerToolStripMenuItem";
+            this.sendConfigurationFileTo3dpBurnerToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+            this.sendConfigurationFileTo3dpBurnerToolStripMenuItem.Text = "Send configuration file to 3dpBurner...";
+            this.sendConfigurationFileTo3dpBurnerToolStripMenuItem.Click += new System.EventHandler(this.sendConfigurationFileTo3dpBurnerToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(284, 6);
             // 
             // restoreSettingsToolStripMenuItem
             // 
             this.restoreSettingsToolStripMenuItem.Name = "restoreSettingsToolStripMenuItem";
-            this.restoreSettingsToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
-            this.restoreSettingsToolStripMenuItem.Text = "Restore Settings";
+            this.restoreSettingsToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+            this.restoreSettingsToolStripMenuItem.Text = "Restore application settings";
             this.restoreSettingsToolStripMenuItem.Click += new System.EventHandler(this.restoreSettingsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
@@ -885,7 +912,7 @@ namespace _3dpBurner
             this.bStart.Location = new System.Drawing.Point(574, 7);
             this.bStart.Name = "bStart";
             this.bStart.Size = new System.Drawing.Size(83, 76);
-            this.bStart.TabIndex = 3;
+            this.bStart.TabIndex = 4;
             this.bStart.Text = "Resume";
             this.bStart.UseVisualStyleBackColor = false;
             this.bStart.Click += new System.EventHandler(this.bStart_Click);
@@ -900,7 +927,7 @@ namespace _3dpBurner
             this.bPause.Location = new System.Drawing.Point(483, 7);
             this.bPause.Name = "bPause";
             this.bPause.Size = new System.Drawing.Size(83, 76);
-            this.bPause.TabIndex = 2;
+            this.bPause.TabIndex = 3;
             this.bPause.Text = "Hold";
             this.bPause.UseVisualStyleBackColor = false;
             this.bPause.Click += new System.EventHandler(this.bPause_Click);
@@ -911,7 +938,7 @@ namespace _3dpBurner
             this.panel5.Controls.Add(this.btnReset);
             this.panel5.Location = new System.Drawing.Point(10, 6);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(441, 81);
+            this.panel5.Size = new System.Drawing.Size(376, 81);
             this.panel5.TabIndex = 1;
             // 
             // btnReset
@@ -924,7 +951,7 @@ namespace _3dpBurner
             this.btnReset.ForeColor = System.Drawing.Color.Black;
             this.btnReset.Location = new System.Drawing.Point(5, 5);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(430, 71);
+            this.btnReset.Size = new System.Drawing.Size(365, 71);
             this.btnReset.TabIndex = 1;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = false;
@@ -934,6 +961,7 @@ namespace _3dpBurner
             // 
             this.panel19.BackColor = System.Drawing.Color.White;
             this.panel19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel19.Controls.Add(this.btnUnlock);
             this.panel19.Controls.Add(this.panel5);
             this.panel19.Controls.Add(this.bPause);
             this.panel19.Controls.Add(this.bStart);
@@ -941,6 +969,22 @@ namespace _3dpBurner
             this.panel19.Name = "panel19";
             this.panel19.Size = new System.Drawing.Size(671, 93);
             this.panel19.TabIndex = 8;
+            // 
+            // btnUnlock
+            // 
+            this.btnUnlock.BackColor = System.Drawing.Color.Silver;
+            this.btnUnlock.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btnUnlock.FlatAppearance.BorderSize = 5;
+            this.btnUnlock.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUnlock.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUnlock.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnUnlock.Location = new System.Drawing.Point(391, 17);
+            this.btnUnlock.Name = "btnUnlock";
+            this.btnUnlock.Size = new System.Drawing.Size(72, 59);
+            this.btnUnlock.TabIndex = 2;
+            this.btnUnlock.Text = "Unlock";
+            this.btnUnlock.UseVisualStyleBackColor = false;
+            this.btnUnlock.Click += new System.EventHandler(this.button11_Click);
             // 
             // frm3dpBurner
             // 
@@ -999,7 +1043,6 @@ namespace _3dpBurner
         private System.Windows.Forms.Button btnLaserOn;
         private System.Windows.Forms.Button btsLaserOff;
         private System.Windows.Forms.Button btnCustom1;
-        private System.Windows.Forms.Button btnUnlock;
         private System.Windows.Forms.TextBox tbFile;
         private System.Windows.Forms.Button bOpenfile;
         private System.Windows.Forms.Button bSendCmd;
@@ -1057,6 +1100,11 @@ namespace _3dpBurner
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Panel panel19;
+        private System.Windows.Forms.Button btnUnlock;
+        private System.Windows.Forms.Button btnGotoXoYo;
+        private System.Windows.Forms.ToolStripMenuItem sendConfigurationFileTo3dpBurnerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem view3dpBurnerSettingsToolStripMenuItem;
     }
 }
 

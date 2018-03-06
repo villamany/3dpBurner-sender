@@ -46,7 +46,7 @@ namespace _3dpBurner
 
     public partial class frm3dpBurner : Form
     {
-        const string ver = "1.1";//app version
+        const string ver = "1.2";//app version
         string rxString;
         List<string> fileLines;
         Int32 fileLinesCount;//for file streaming control
@@ -364,9 +364,10 @@ namespace _3dpBurner
         private void Form1_Load(object sender, EventArgs e)
         {
             Text = "3dpBurner Sender v" + ver;
-            bHome.Text = "Go\r\nHome";
+            btnGotoXoYo.Text = "GoTo\r\nX0,Y0";
+            bHome.Text = "Homing\r\nXY";
             btnZero.Text = "Zero\r\nXY";
-            btnUnlock.Text = "Unlock\r\nAlarm";
+            btnUnlock.Text = "Alarm\r\nUnlock";
             loadSettings();
         }
         //Load settings
@@ -441,6 +442,11 @@ namespace _3dpBurner
         {
             jogging = true;
             sendLine("G91G0Y-" + tbStepSize.Text);
+        }
+        //GoTo X0, Y0 button
+        private void btnGotoXoYo_Click(object sender, EventArgs e)
+        {
+            sendLine("G0 X0 Y0");  
         }
         //Homming button
         private void bHome_Click(object sender, EventArgs e)
@@ -535,10 +541,9 @@ namespace _3dpBurner
                 lblElapsed.Text = elapsed.ToString(@"hh\:mm\:ss");
             }
         }
-        //Send file button
+        //Resume button
         private void bStart_Click(object sender, EventArgs e)
         {
-
                 {
                     rtbLog.AppendText("[RESUME]\r\n");
                     rtbLog.ScrollToCaret();
@@ -567,6 +572,13 @@ namespace _3dpBurner
         //Update time elapsed
         private void tmrUpdates_Tick(object sender, EventArgs e)
         {
+            //Unlockl button flashing
+            if (statusStrip1.BackColor == Color.DarkOrange)//is in alarm mode?
+            {
+                if (btnUnlock.BackColor == Color.Silver) btnUnlock.BackColor = Color.DarkOrange; else btnUnlock.BackColor = Color.Silver;
+            }
+            else btnUnlock.BackColor = Color.Silver;
+
             if (transfer)//if active transfer update elapsed/remaining time time
             {
                 float progressPorc;
@@ -806,6 +818,89 @@ namespace _3dpBurner
                 logError("Geting available ports info", er);
             }
         }
+        //Send configuration file to machine
+        private void sendConfigurationFileTo3dpBurnerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try 
+            {
+                if (!connected)//if no connectio
+                {
+                    logError("Connect first!" + "\r\n", null);
+                    rtbLog.ScrollToCaret();
+                    return;
+                }
+                if (transfer)//if transfering file the exit
+                {
+                    logError("Stop the file transfer first!" + "\r\n",null);
+                    rtbLog.ScrollToCaret();
+                    return;
+                }
+  
+                openFileDialog1.FileName = "";
+                if (openFileDialog1.ShowDialog() != DialogResult.OK) return;
+                if (!File.Exists(openFileDialog1.FileName))
+                {
+                    logError("Error opening file", null);
+                    return;
+                }
+                rtbLog.AppendText("[Sending configuration file...]\r\n");
+                rtbLog.ScrollToCaret();
+                rtbLog.Refresh();
+            
+                StreamReader file = new StreamReader(openFileDialog1.FileName);
+                try
+                {
+                    string line = file.ReadLine();
+                    while (line!=null )//line=null mean end of file
+                    {
+                        rtbLog.AppendText(line + " >>> ");
+                        dataProcessing = true;
+                        serialPort1.Write(line + "\r");
+                    
+                        while (dataProcessing) Application.DoEvents() ;//wait response processed
+                        line = file.ReadLine();          
+                    }
+                }
+                catch (Exception er)
+                {
+                    logError("Error sending file", er);
+                }
+                file.Close();
+             }
+             catch (Exception err)
+             {
+                    logError("Sending configuration file", err);
+             }
+          }
+        //View 3dpBurner configuration
+        private void view3dpBurnerSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!connected)//if no connectio
+                {
+                    logError("Connect first!" + "\r\n", null);
+                    rtbLog.ScrollToCaret();
+                    return;
+                }
+                if (transfer)//if transfering file the exit
+                {
+                    logError("Stop the file transfer first!" + "\r\n", null);
+                    rtbLog.ScrollToCaret();
+                    return;
+                }
+
+                rtbLog.AppendText("[Getting configuration...]\r\n");
+                serialPort1.Write("$$\r$N\r");
+            }           
+            catch(Exception err)
+            {
+                logError("Retrieving configuration", err);
+            }
+
+        }
+
+
 
     }
 }
